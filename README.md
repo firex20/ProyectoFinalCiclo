@@ -11,6 +11,10 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 
 ---
 
+## Hardware usado en el proyecto
+
+---
+
 ## To-Do ✅ ❌
 
 - Preparar la infraestructura fisica
