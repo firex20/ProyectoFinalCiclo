@@ -22,4 +22,4 @@ Para acceder desde fuera a el proyecto se le asignara una ip publica a la maquin
 ---
 
 ## Software
-El software que se usara para crear la infraestructura del proyecto sera Harvester instalado de manera nativa en cada servidor y Rancher instalado sobre un contenedor docker en una maquina virtual externa con un sistema Linux, esta maquina virtual sera una proporcionada por la empresa, pero podria usarse cualquier equipo local compatible con docker que tenga acceso a la red de management.
+El software que se usara para crear la infraestructura del proyecto sera [Harvester](https://harvesterhci.io/) instalado de manera nativa en cada servidor y [Rancher](https://www.rancher.com/) instalado sobre un contenedor docker en una maquina virtual externa con un sistema Linux, esta maquina virtual sera una proporcionada por la empresa, pero podria usarse cualquier equipo local compatible con docker que tenga acceso a la red de management.
