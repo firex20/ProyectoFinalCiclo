@@ -19,7 +19,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 
 - Preparar la infraestructura fisica
     - Funcion ❌
-    - Documentación ❌
+    - Documentación ✅
 - Instalar Harvester y crear el cluster
     - Funcion ❌
     - Documentación ❌
