@@ -52,4 +52,4 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 
 ## Pato paco
 
-<img src="paco.jpeg" width="200" alt="El Paco" title="El Paco te roba el tabaco ;)">
+<img src=".git/paco.jpeg" width="200" alt="El Paco" title="El Paco te roba el tabaco ;)">
