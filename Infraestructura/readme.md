@@ -1,7 +1,7 @@
 # Infraestructura del proyecto
 
 ## Hardware
-Para este proyecto se van a usar tres servidores dedicados con 128 GB de memoria ram cada uno, cada servidor tiene 10 interfaces de red de ethernet de 1GB de velocidad y una interfaz extra para la ILO del servidor, de estas interfaces se van a usar 9 de ellas en cada uno. 
+Para este proyecto se van a usar tres servidores dedicados con 128 GB de memoria ram cada uno, cada servidor tiene 10 interfaces de red de ethernet de 1GB de velocidad y una interfaz extra para la ILO del servidor, de estas interfaces se van a usar 9 de ellas en cada uno. Cada servidor tendra 2 discos ssd de 800GB en una raid 1+0 para la instalacion del sistema y otros 2 discos ssd de 980GB en otra raid 1+0 para los datos de las maquinas virtuales.
 
 Tambien se va a usar un switch con funcionalidad de Vlan.
 
