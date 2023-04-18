@@ -47,3 +47,9 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 ---
 
 ## Documentación y manuales usados para el proyecto
+
+---
+
+## Pato paco
+
+<img src=".git/paco.jpeg" width="200" alt="El Paco" title="El Paco te roba el tabaco ;)">
