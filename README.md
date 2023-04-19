@@ -21,7 +21,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
     - Funcion ❌
     - Documentación ❌
 - Instalar Harvester y crear el cluster
-    - Funcion ❌
+    - Funcion ✅
     - Documentación ✅
 - Instalar Rancher y conectarlo con Harvester
     - Funcion ❌
