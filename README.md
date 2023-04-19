@@ -43,7 +43,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 ---
 
 ## Errores y problemas encontrados durante el desarrollo del proyecto
-
+- Al intentar instalar harvester conectandolo al switch con el puerto en modo trunk para aceptar vlan tageadas no era posible conectarse, hay que poner el puerto del switch en modo acceso.
 ---
 
 ## Documentación y manuales usados para el proyecto
