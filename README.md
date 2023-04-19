@@ -18,7 +18,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 ## To-Do ✅ ❌
 
 - Preparar la infraestructura fisica
-    - Funcion ❌
+    - Funcion ✅
     - Documentación ✅
 - Instalar Harvester y crear el cluster
     - Funcion ❌
