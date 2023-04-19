@@ -24,8 +24,8 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
     - Funcion ❌
     - Documentación ❌
 - Configuración de la network en el cluster
-    - Funcion ❌
-    - Documentación ❌
+    - Funcion ✅
+    - Documentación ✅
 - Instalar Rancher y conectarlo con Harvester
     - Funcion ❌
     - Documentación ❌
