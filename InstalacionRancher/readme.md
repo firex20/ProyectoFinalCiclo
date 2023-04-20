@@ -46,6 +46,8 @@ Normalmente antes de iniciar cualquier firewall habria que permitir primero el a
 Para comprobar que se ha instalado correctamente:
 ```console
 systemctl status firewalld
+```
+```
 ● firewalld.service - firewalld - dynamic firewall daemon
      Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; vendor preset: enabled)
      Active: active (running) since Thu 2023-04-20 10:30:58 CEST; 13min ago
