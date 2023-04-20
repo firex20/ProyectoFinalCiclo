@@ -95,3 +95,59 @@ Hecho esto ya solo podre acceder al servidor con una clave ssh.
 ## Instalación
 
 A continuación voy a describir el proceso de instalación de manera manual de Rancher desde un SO recien instalado.
+
+### **Docker**
+Lo primero que hay que instalar en el servidor sera docker, para ello tengo que **añadir el repositorio** correspondiente de docker para rocky linux, no hay un repositorio especifico de docker para rocky linux, pero al estar basado en centos, es compatible con el repositorio de este.
+
+```console
+dnf check-update
+dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+```
+
+Ya tengo añadido el repositorio, ahora hay que instalarolo e iniciar el servicio.
+
+```console
+dnf install -y docker-ce docker-ce-cli containerd.io
+systemctl start docker
+systemctl enable docker
+```
+
+Compruebo que se ha iniciado correctamente
+
+```console
+systemctl status docker
+```
+
+```
+● docker.service - Docker Application Container Engine
+     Loaded: loaded (/usr/lib/systemd/system/docker.service; enabled; vendor preset: disabled)
+     Active: active (running) since Thu 2023-04-20 12:34:24 CEST; 2min 56s ago
+TriggeredBy: ● docker.socket
+       Docs: https://docs.docker.com
+   Main PID: 13170 (dockerd)
+      Tasks: 8
+     Memory: 39.5M
+        CPU: 170ms
+     CGroup: /system.slice/docker.service
+             └─13170 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+...
+```
+
+Por último preparo un usuario que no sea root pero con permisos para ejecutar comandos de docker para utilizarlo como usuario de rancher y el cluster de kubernetes. Para ello creo el usuario y lo añado al grupo "docker"
+
+```console
+adduser rancher
+usermod -aG docker rancher
+```
+
+### **Cluster de kubernetes (RKE)**
+Ahora que tengo docker instalado tengo que instalar el cluster de kubernetes, he elegido instalar **RKE (Rancher Kubernetes Engine)** porque es la distribución de kubernetes creada por el equipo de rancher y es la recomendada para el mismo, aunque se puede instalar sobre cualquier otra distribución de cluster de kubernetes.
+
+Lo primero sera descargar el fichero binario apropiado de rke, en este caso es el último release (1.4.4) en su version de linux_amd.
+A partir de ahora, una vez cambio a el usuario "rancher" ejecutare todos los comandos siguientes desde ese usuario.
+
+´´´console
+dnf install -y wget
+su - rancher
+wget https://github.com/rancher/rke/releases/download/v1.4.4/rke_linux-amd64
+´´´
