@@ -24,8 +24,9 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
     - Funcion ✅
     - Documentación ✅
 - Instalar Rancher y conectarlo con Harvester
-    - Funcion ❌
-    - Documentación ❌
+    - Funcion ✅
+    - Documentación ✅
+    - Automatizacion con ansible ❌
 - Crear cluster de kubernetes desde rancher y testearlo
     - Funcion ❌
     - Documentación ❌
@@ -44,14 +45,25 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 
 ## Errores y problemas encontrados durante el desarrollo del proyecto
 - Al intentar instalar harvester conectandolo al switch con el puerto en modo trunk para aceptar vlan tageadas no era posible conectarse, hay que poner el puerto del switch en modo acceso.
+
 ---
 
 ## Documentación y manuales usados para el proyecto
 
-https://docs.harvesterhci.io/v1.1
-https://www.balena.io/etcher
-https://www.rancher.com/
-https://ranchermanager.docs.rancher.com
+`Instalacion Harvester`
+
+- https://docs.harvesterhci.io/v1.1
+- https://www.balena.io/etcher
+
+`Instalacion Rancher`
+
+- https://rockylinux.org/
+- https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-rocky-linux-9
+- https://www.tecmint.com/open-port-for-specific-ip-address-in-firewalld/
+- https://ranchermanager.docs.rancher.com/v2.5/getting-started/installation-and-upgrade/installation-requirements/port-requirements
+- https://rke.docs.rancher.com/installation
+- https://www.rancher.com/
+- https://ranchermanager.docs.rancher.com
 
 ---
 
