@@ -2,6 +2,8 @@
 
 Rancher es un **gestor de clusters de kubernetes** que permite manejar varios clusters a la vez de distintos tipos, tanto clusteres on-premise como en la nube.
 
+En este documento voy a explicar como he instalado Rancher en una maquina virtual de manera manual, pero tendre preparado un playbook de ansible para hacerlo todo de manera automatica a traves de ssh.
+
 ---
 
 ## Preparacion de la maquina virtual para Rancher
@@ -27,12 +29,6 @@ En el caso de este proyecto, ya que no voy a manejar una gran cantidad de nodos 
 Rancher es compatible con cualquier sistema operativo linux que tenga instalado un cluster de kubernetes, que a su vez, se puede instalar practicamente en cualquier distribucion linux que sea compatible con Docker. En este proyecto voy a usar la última version de **Rocky Linux** como sistema operativo ya que es un SO opensource, ligero y compatible con todo lo necesario para instalar Rancher. Usare una instalación minima ya que para instalar todo lo necesario solo me hara falta el sistema base y acceso con ssh.
 
 Una vez instalado el sistema operativo procedo a empezar a instalar todos los paquetes necesarios para Rancher.
-
----
-
-## Instalación
-
-A continuación voy a describir el proceso de instalación de manera manual de Rancher desde un SO recien instalado, pero tendre preparado un playbook de Ansible para realizar todo este proceso de manera automatica teniendo acceso ssh.
 
 ### **Configuracion basica del firewall**
 
@@ -75,3 +71,27 @@ firewall-cmd --zone=red-interna --add-service=ssh  --permanent
 firewall-cmd --zone=red-interna --add-port=6443/tcp  --permanent
 firewall-cmd --reload
 ```
+
+### **Configuración clave ssh**
+
+Para securizar todavia más el servidor, voy a registrar mi clave publica ssh para el usuario root y voy a deshabilitar la autentificación por contraseña. Para ello creo el directorio .ssh en el directorio home de root y dentro creo un archivo llamado authorized_keys donde copiare la clave.
+
+```console
+mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys && chmod -R go= ~/.ssh
+```
+
+Una vez hecho esto y copiada la clave dentro del archivo, cambio la siguiente configuración del servicio ssh en "/etc/ssh/sshd_config" para desactivar el loggin con contraseña en texto plano,
+
+```nano
+# To disable tunneled clear text passwords, change to no here!
+PasswordAuthentication no
+#PermitEmptyPasswords no
+```
+
+Hecho esto ya solo podre acceder al servidor con una clave ssh.
+
+---
+
+## Instalación
+
+A continuación voy a describir el proceso de instalación de manera manual de Rancher desde un SO recien instalado.
