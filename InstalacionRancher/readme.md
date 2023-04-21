@@ -69,6 +69,7 @@ firewall-cmd --new-zone=red-interna --permanent
 firewall-cmd --zone=red-interna --add-source=192.168.56.0/24 --permanent
 firewall-cmd --zone=red-interna --add-service=ssh  --permanent
 firewall-cmd --zone=red-interna --add-port=6443/tcp  --permanent
+firewall-cmd --zone=red-interna --add-port=10250/tcp  --permanent
 firewall-cmd --reload
 ```
 
@@ -104,10 +105,18 @@ dnf check-update
 dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 ```
 
-Ya tengo añadido el repositorio, ahora hay que instalarolo e iniciar el servicio.
+Una vez añadido el repositorio, antes de instalar docker, hay que tener en cuenta que la version que estoy usando de rke no soporta versiones de docker superiores a la 20.10.x, asi que tengo que instalar esa versión desde el repositorio, para ver las versiones disponibles en el repositorio que acabo de instalar uso el siguiente comando:
 
 ```console
-dnf install -y docker-ce docker-ce-cli containerd.io
+yum list docker-ce --showduplicates | sort -r
+```
+
+El numero de versión sera el de la segunda columna empezando este justo despues de el doble punto ":" y terminando antes del guión "-", con lo cual la version que tengo que instalar sera la 20.10.24
+
+Ahora que ya tengo añadido el repositorio y se que versión tengo que instalar, hay que instalarlo e iniciar el servicio.
+
+```console
+yum install -y docker-ce-20.10.24 docker-ce-cli-20.10.24 containerd.io
 systemctl start docker
 systemctl enable docker
 ```
@@ -152,20 +161,58 @@ su - rancher
 wget https://github.com/rancher/rke/releases/download/v1.4.4/rke_linux-amd64
 mkdir -p .local/bin && mv rke_linux-amd64 .local/bin/rke && chmod +x .local/bin/rke
 ```
-A continuación tengo que preparar la configuración del cluster dentro de un archivo llamado "cluster.yml", voy a usar el [ejemplo de configuración minima](https://rke.docs.rancher.com/example-yamls#minimal-cluster-yml-example) que proporciona rke y lo modifico para que se adecue a mi servidor.
+A continuación tengo que preparar la **configuración del cluster** dentro de un archivo llamado "cluster.yml", voy a usar el [ejemplo de configuración minima](https://rke.docs.rancher.com/example-yamls#minimal-cluster-yml-example) que proporciona rke y lo modifico para que se adecue a mi servidor.
 
 ```yml
 nodes:
-    - address: 127.0.0.1
+    - address: 192.168.56.101
       user: rancher
       role:
         - controlplane
         - etcd
         - worker
+      ssh_key_path: /home/rancher/.ssh/id_rsa
 ```
+Antes de instalar el cluster de rke debo crear una **clave ssh** para el usuario "rancher" de la misma forma que lo hice para root, para crearla simplemente uso el comando **"ssh-keygen"** con el usuario rancher y luego añado la clave publica generada en el fichero **.shh/authorized_keys**
 
 Ahora para crear el cluster de kubernetes debo ejecutar el siguiente comando mientras me encuentro en el mismo directorio en el que esta el fichero "cluster.yml"
 
 ```console
 rke up
 ```
+
+Si todo ha ido correctamente se vera la siguiente linea al final del proceso:
+
+```console
+INFO[0187] Finished building Kubernetes cluster successfully
+```
+
+Por último, en la documetación de RKE recomiendan hacer copias de los tres archivos que hemos generado durante la instalación **(cluster.rkestate  cluster.yml  kube_config_cluster.yml)** ya que en estos ficheros tenemos toda la configuración y información de acceso del cluster. Ahora que ya tengo instalado y funcionando el cluster de RKE, hay que instalar las herramientas necesarias para administrarlo e instalar rancher las cuales son **kubectl** y **helm**. No hace falta que estas herramientas se instalen en el propio servidor de kubernetes ya que se puede administrar de manera remota, pero yo las voy a instalar directamente en el servidor.
+
+### **Instalar Kubectl y Helm**
+
+Primero voy a **instalar y configurar kubectl**, para ello primero tengo que elegir una versión y descargarla en el servidor con el comando "curl", para elegir una versión hay que tener en cuenta que kubectl funciona con una versión inferior o superior de kubernetes que la suya, es decir, si instalamos kubectl 1.26, este nos valdra para administrar clusters con kubernetes 1.25.x, 1.26.x o 1.27.x
+
+En el caso del cluster que he instalado tiene la versión 1.25, con lo cual debo instalar la versión 1.26 de kubectl. Ejecutando los siguientes comandos ya tendre descargado e instalado kubectl.
+
+```console
+curl -LO https://dl.k8s.io/release/v1.26.0/bin/linux/amd64/kubectl
+chmod +x kubectl
+mkdir -p ~/.local/bin
+mv ./kubectl ~/.local/bin/kubectl
+```
+
+Ahora tendremos que copiar el archivo de conexión del cluster que se genero durante la instalación a el directorio de configuración de kubectl.
+
+```console
+mkdir ~/.kube
+cp ~/rke/kube_config_cluster.yml ~/.kube/config
+```
+
+Ya tenemos configurado kubectl, ahora si ejecuto un **"kubectl get nodes"** deberia de ver el nodo local
+
+```console
+NAME             STATUS   ROLES                      AGE   VERSION
+192.168.56.101   Ready    controlplane,etcd,worker   84m   v1.25.6
+```
+

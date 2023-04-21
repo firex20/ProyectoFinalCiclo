@@ -45,6 +45,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 
 ## Errores y problemas encontrados durante el desarrollo del proyecto
 - Al intentar instalar harvester conectandolo al switch con el puerto en modo trunk para aceptar vlan tageadas no era posible conectarse, hay que poner el puerto del switch en modo acceso.
+- Al instalar docker para rancher hay que instalar una versión concreta, no sirven las ultimas.
 
 ---
 
@@ -59,9 +60,11 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 
 - https://rockylinux.org/
 - https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-rocky-linux-9
+- https://docs.docker.com/engine/install/centos/
 - https://www.tecmint.com/open-port-for-specific-ip-address-in-firewalld/
 - https://ranchermanager.docs.rancher.com/v2.5/getting-started/installation-and-upgrade/installation-requirements/port-requirements
 - https://rke.docs.rancher.com/installation
+- https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
 - https://www.rancher.com/
 - https://ranchermanager.docs.rancher.com
 
