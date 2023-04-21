@@ -105,10 +105,26 @@ dnf check-update
 dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 ```
 
+(Ubuntu)
+
+```console
+apt update
+apt install -y apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+apt update
+```
+
 Una vez añadido el repositorio, antes de instalar docker, hay que tener en cuenta que la version que estoy usando de rke no soporta versiones de docker superiores a la 20.10.x, asi que tengo que instalar esa versión desde el repositorio, para ver las versiones disponibles en el repositorio que acabo de instalar uso el siguiente comando:
 
 ```console
 yum list docker-ce --showduplicates | sort -r
+```
+
+(Ubuntu)
+
+```console
+apt list docker-ce -a
 ```
 
 El numero de versión sera el de la segunda columna empezando este justo despues de el doble punto ":" y terminando antes del guión "-", con lo cual la version que tengo que instalar sera la 20.10.24
@@ -119,6 +135,12 @@ Ahora que ya tengo añadido el repositorio y se que versión tengo que instalar,
 yum install -y docker-ce-20.10.24 docker-ce-cli-20.10.24 containerd.io
 systemctl start docker
 systemctl enable docker
+```
+
+(ubuntu)
+
+```console
+apt install -y docker-ce=5:20.10.24~3-0~ubuntu-jammy docker-ce-cli=5:20.10.24~3-0~ubuntu-jammy containerd.io
 ```
 
 Compruebo que se ha iniciado correctamente
@@ -160,6 +182,17 @@ dnf install -y wget
 su - rancher
 wget https://github.com/rancher/rke/releases/download/v1.4.4/rke_linux-amd64
 mkdir -p .local/bin && mv rke_linux-amd64 .local/bin/rke && chmod +x .local/bin/rke
+```
+
+(Ubuntu)
+
+```console
+su - rancher
+wget https://github.com/rancher/rke/releases/download/v1.4.4/rke_linux-amd64
+mkdir -p .local/bin && mv rke_linux-amd64 .local/bin/rke && chmod +x .local/bin/
+echo 'export PATH="~/.local/bin:$PATH"' >> .bashrc
+export PATH="~/.local/bin:$PATH"
+rke
 ```
 A continuación tengo que preparar la **configuración del cluster** dentro de un archivo llamado "cluster.yml", voy a usar el [ejemplo de configuración minima](https://rke.docs.rancher.com/example-yamls#minimal-cluster-yml-example) que proporciona rke y lo modifico para que se adecue a mi servidor.
 
@@ -216,3 +249,20 @@ NAME             STATUS   ROLES                      AGE   VERSION
 192.168.56.101   Ready    controlplane,etcd,worker   84m   v1.25.6
 ```
 
+Ahora voy a instalar **Helm**
+
+```
+wget https://get.helm.sh/helm-v3.11.3-linux-amd64.tar.gz
+tar -zxvf helm-v3.11.3-linux-amd64.tar.gz
+mv linux-amd64/helm .local/bin/helm
+```
+
+```
+helm install rancher rancher-stable/rancher \
+  --namespace cattle-system \
+  --set hostname=pmoldenhauer.trevenque.es \
+  --set bootstrapPassword=momoEFP \
+  --set ingress.tls.source=letsEncrypt \
+  --set letsEncrypt.email=pmoldenhauer@trevenque.es \
+  --set letsEncrypt.ingress.class=nginx
+```
