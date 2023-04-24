@@ -26,7 +26,7 @@ En el caso de este proyecto, ya que no voy a manejar una gran cantidad de nodos 
 
 ### **Sistema operativo**
 
-Rancher es compatible con cualquier sistema operativo linux que tenga instalado un cluster de kubernetes, que a su vez, se puede instalar practicamente en cualquier distribucion linux que sea compatible con Docker. En este proyecto voy a usar la última version de **Rocky Linux** como sistema operativo ya que es un SO opensource, ligero y compatible con todo lo necesario para instalar Rancher. Usare una instalación minima ya que para instalar todo lo necesario solo me hara falta el sistema base y acceso con ssh.
+Rancher es compatible con cualquier sistema operativo linux que tenga instalado un cluster de kubernetes, que a su vez, se puede instalar practicamente en cualquier distribucion linux que sea compatible con Docker. En este proyecto voy a usar <del>la última version de **Rocky Linux** como sistema operativo ya que es un SO opensource, ligero y compatible con todo lo necesario para instalar Rancher.</del> Al final usare una maquina de Ubuntu 22.04 en su version servidor, aunque como ya tenia preparada la instalación en Rocky Linux y la instalación es casi igual, dejare los comandos correspondientes para cada sistema. Usare una instalación minima ya que para instalar todo lo necesario solo me hara falta el sistema base y acceso con ssh.
 
 Una vez instalado el sistema operativo procedo a empezar a instalar todos los paquetes necesarios para Rancher.
 
@@ -38,11 +38,38 @@ Tras acceder al servidor como root, lo primero que hay que hacer es securizar co
 dnf install firewalld -y
 systemctl start firewalld
 ```
-Normalmente antes de iniciar cualquier firewall habria que permitir primero el acceso ssh a el servidor para no quedarnos sin conexion con el servidor, pero la configuración por defecto de firewalld ya permite conexiones ssh.
-Para comprobar que se ha instalado correctamente:
+
+**(En Ubuntu no hace falta instalar el firewall, pero usare ufw ya que ya viene instalado por defecto en el sistema)**
+
+
+Normalmente antes de iniciar cualquier firewall habria que permitir primero el acceso ssh a el servidor para no quedarnos sin conexion con el servidor, pero la configuración por defecto de firewalld ya permite conexiones ssh. Para ufw si que hara falta permitir el servicio ssh antes de iniciar el firewall:
+
+```console
+ufw allow from <IpPermitida> proto tcp to any port 22
+ufw enable
+systemctl status ufw
+```
+
+```console
+● ufw.service - Uncomplicated firewall
+     Loaded: loaded (/lib/systemd/system/ufw.service; enabled; vendor preset: enabled)
+     Active: active (exited) since Mon 2023-04-24 07:32:56 UTC; 1h 13min ago
+       Docs: man:ufw(8)
+   Main PID: 495 (code=exited, status=0/SUCCESS)
+        CPU: 101ms
+
+abr 24 07:32:55 pmoldenhauer systemd[1]: Starting Uncomplicated firewall...
+abr 24 07:32:56 pmoldenhauer systemd[1]: Finished Uncomplicated firewall.
+```
+
+En este caso solo permitire las ips de trevenque para que solo se pueda acceder al ssh desde dentro del cloud center. En rocky linux tambien hare lo mismo pero creando una zona con las ips permitidas.
+
+Para comprobar que se ha iniciado correctamente el firewall:
+
 ```console
 systemctl status firewalld
 ```
+
 ```
 ● firewalld.service - firewalld - dynamic firewall daemon
      Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled; vendor preset: enabled)
@@ -71,6 +98,15 @@ firewall-cmd --zone=red-interna --add-service=ssh  --permanent
 firewall-cmd --zone=red-interna --add-port=6443/tcp  --permanent
 firewall-cmd --zone=red-interna --add-port=10250/tcp  --permanent
 firewall-cmd --reload
+```
+
+(Ubuntu)
+
+```console
+ufw allow http
+ufw allow https
+ufw allow 6443
+ufw allow from 172.17.0.0/16
 ```
 
 ### **Configuración clave ssh**
@@ -171,56 +207,34 @@ adduser rancher
 usermod -aG docker rancher
 ```
 
-### **Cluster de kubernetes (RKE)**
-Ahora que tengo docker instalado tengo que instalar el cluster de kubernetes, he elegido instalar **RKE (Rancher Kubernetes Engine)** porque es la distribución de kubernetes creada por el equipo de rancher y es la recomendada para el mismo, aunque se puede instalar sobre cualquier otra distribución de cluster de kubernetes.
+### **Cluster de kubernetes (RKE2)**
+Ahora que tengo docker instalado tengo que instalar el cluster de kubernetes, he elegido instalar **RKE2 (Rancher Kubernetes Engine)** porque es la distribución de kubernetes creada por el equipo de rancher y es la recomendada para el mismo, aunque se puede instalar sobre cualquier otra distribución de cluster de kubernetes.
 
-Lo primero sera descargar el fichero binario apropiado de rke, en este caso es el último release (1.4.4) en su version de linux_amd ([Releases de RKE](https://github.com/rancher/rke/releases)).
-A partir de ahora, una vez cambio a el usuario "rancher" ejecutare todos los comandos siguientes desde ese usuario.
+Para instalarlo lo primero sera descargar y ejecutar desde el **usuario root** el siguiente script:
 
 ```console
-dnf install -y wget
-su - rancher
-wget https://github.com/rancher/rke/releases/download/v1.4.4/rke_linux-amd64
-mkdir -p .local/bin && mv rke_linux-amd64 .local/bin/rke && chmod +x .local/bin/rke
+curl -sfL https://get.rke2.io | sh -
+yum -y install rke2-server
 ```
 
 (Ubuntu)
 
 ```console
-su - rancher
-wget https://github.com/rancher/rke/releases/download/v1.4.4/rke_linux-amd64
-mkdir -p .local/bin && mv rke_linux-amd64 .local/bin/rke && chmod +x .local/bin/
-echo 'export PATH="~/.local/bin:$PATH"' >> .bashrc
-export PATH="~/.local/bin:$PATH"
-rke
+curl -sfL https://get.rke2.io | sh -
 ```
-A continuación tengo que preparar la **configuración del cluster** dentro de un archivo llamado "cluster.yml", voy a usar el [ejemplo de configuración minima](https://rke.docs.rancher.com/example-yamls#minimal-cluster-yml-example) que proporciona rke y lo modifico para que se adecue a mi servidor.
 
-```yml
-nodes:
-    - address: 192.168.56.101
-      user: rancher
-      role:
-        - controlplane
-        - etcd
-        - worker
-      ssh_key_path: /home/rancher/.ssh/id_rsa
+Ahora ya tenemos disponible el comando **"rke2"** y podremos iniciar el servidor con los siguientes comandos:
+```console
+systemctl enable rke2-server
+systemctl start rke2-server
 ```
-Antes de instalar el cluster de rke debo crear una **clave ssh** para el usuario "rancher" de la misma forma que lo hice para root, para crearla simplemente uso el comando **"ssh-keygen"** con el usuario rancher y luego añado la clave publica generada en el fichero **.shh/authorized_keys**
 
-Ahora para crear el cluster de kubernetes debo ejecutar el siguiente comando mientras me encuentro en el mismo directorio en el que esta el fichero "cluster.yml"
+Comprobamos que esta funcionando correctamente:
 
 ```console
-rke up
+systemctl status rke2-server
 ```
 
-Si todo ha ido correctamente se vera la siguiente linea al final del proceso:
-
-```console
-INFO[0187] Finished building Kubernetes cluster successfully
-```
-
-Por último, en la documetación de RKE recomiendan hacer copias de los tres archivos que hemos generado durante la instalación **(cluster.rkestate  cluster.yml  kube_config_cluster.yml)** ya que en estos ficheros tenemos toda la configuración y información de acceso del cluster. Ahora que ya tengo instalado y funcionando el cluster de RKE, hay que instalar las herramientas necesarias para administrarlo e instalar rancher las cuales son **kubectl** y **helm**. No hace falta que estas herramientas se instalen en el propio servidor de kubernetes ya que se puede administrar de manera remota, pero yo las voy a instalar directamente en el servidor.
 
 ### **Instalar Kubectl y Helm**
 

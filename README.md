@@ -46,6 +46,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 ## Errores y problemas encontrados durante el desarrollo del proyecto
 - Al intentar instalar harvester conectandolo al switch con el puerto en modo trunk para aceptar vlan tageadas no era posible conectarse, hay que poner el puerto del switch en modo acceso.
 - Al instalar docker para rancher hay que instalar una versión concreta, no sirven las ultimas.
+- Al intentar instalar el chart de helm de rancher sobre RKE hay incompatibilidades con la ultima version, para solocuinarlo he decidido instalar RKE2 en vez de RKE normal.
 
 ---
 
