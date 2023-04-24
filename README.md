@@ -47,6 +47,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - Al intentar instalar harvester conectandolo al switch con el puerto en modo trunk para aceptar vlan tageadas no era posible conectarse, hay que poner el puerto del switch en modo acceso.
 - Al instalar docker para rancher hay que instalar una versión concreta, no sirven las ultimas.
 - Al intentar instalar el chart de helm de rancher sobre RKE hay incompatibilidades con la ultima version, para solocuinarlo he decidido instalar RKE2 en vez de RKE normal.
+- En la configuración del cluster RKE2 hay que configurar el rango de ips para los pods del cluster, ya que puede entrar en conflicto con otras redes, por defecto usa la red 10.43.0.0/16 y la 10.42.0.0/16
 
 ---
 
