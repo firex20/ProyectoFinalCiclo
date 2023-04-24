@@ -68,6 +68,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
 - https://www.rancher.com/
 - https://ranchermanager.docs.rancher.com
+- https://cert-manager.io/docs/installation/helm/
 
 ---
 

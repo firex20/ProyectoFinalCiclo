@@ -107,6 +107,10 @@ ufw allow http
 ufw allow https
 ufw allow 6443
 ufw allow from 172.17.0.0/16
+ufw allow from 10.200.128.0/24
+ufw allow from 127.0.0.1/24
+ufw allow from 217.18.163.165
+ufw allow from 10.42.0.0/16
 ```
 
 ### **Configuración clave ssh**
@@ -133,7 +137,7 @@ Hecho esto ya solo podre acceder al servidor con una clave ssh.
 
 A continuación voy a describir el proceso de instalación de manera manual de Rancher desde un SO recien instalado.
 
-### **Docker**
+### **Docker** (No es necesario para RKE2, pero si para casi cualquier otro cluster de kubernetes)
 Lo primero que hay que instalar en el servidor sera docker, para ello tengo que **añadir el repositorio** correspondiente de docker para rocky linux, no hay un repositorio especifico de docker para rocky linux, pero al estar basado en centos, es compatible con el repositorio de este.
 
 ```console
@@ -229,38 +233,69 @@ systemctl enable rke2-server
 systemctl start rke2-server
 ```
 
+Antes de iniciar el servidor, hay que crear un archivo de configuracion y cambiar las opciones que sean necesarias.
+
+```console
+mkdir -p /etc/rancher/rke2
+touch /etc/rancher/rke2/config.yaml
+```
+
+```yaml
+write-kubeconfig-mode: "0644"
+tls-san:
+  - "pmoldenahuer.trevenque.es"
+node-label:
+  - "type=master"
+cluster-cidr:
+  - "192.168.1.0/24"
+service-cidr:
+  - "192.168.2.0/24"
+cluster-dns:
+  - "192.168.2.10"
+cluster-domain:
+  - "trevenque.es"
+debug: false
+```
+
 Comprobamos que esta funcionando correctamente:
 
 ```console
 systemctl status rke2-server
 ```
 
+Se crea automaticamente un archivo de configuración de kubectl en el directorio **/etc/rancher/rke2/rke2.yaml**.
+
+Ya tengo el servidor de rke2 activo, ahora tengo que instalar las herramientas necesarias para administrarlo.
 
 ### **Instalar Kubectl y Helm**
+A partir de aqui hago todas las instalaciones con el usuario **rancher**.
 
 Primero voy a **instalar y configurar kubectl**, para ello primero tengo que elegir una versión y descargarla en el servidor con el comando "curl", para elegir una versión hay que tener en cuenta que kubectl funciona con una versión inferior o superior de kubernetes que la suya, es decir, si instalamos kubectl 1.26, este nos valdra para administrar clusters con kubernetes 1.25.x, 1.26.x o 1.27.x
 
-En el caso del cluster que he instalado tiene la versión 1.25, con lo cual debo instalar la versión 1.26 de kubectl. Ejecutando los siguientes comandos ya tendre descargado e instalado kubectl.
+En el caso del cluster que he instalado tiene la versión 1.24, con lo cual debo instalar la versión 1.25 de kubectl. Ejecutando los siguientes comandos ya tendre descargado e instalado kubectl.
 
 ```console
-curl -LO https://dl.k8s.io/release/v1.26.0/bin/linux/amd64/kubectl
+curl -LO https://dl.k8s.io/release/v1.25.0/bin/linux/amd64/kubectl
 chmod +x kubectl
 mkdir -p ~/.local/bin
 mv ./kubectl ~/.local/bin/kubectl
 ```
 
-Ahora tendremos que copiar el archivo de conexión del cluster que se genero durante la instalación a el directorio de configuración de kubectl.
+Ahora tendremos que copiar el archivo de conexión del cluster que se genero durante la instalación a el directorio de configuración de kubectl. Lo tendremos que hacer con el usuario **root** ya que con rancher no tenemos permisos para copiarlo.
 
 ```console
 mkdir ~/.kube
-cp ~/rke/kube_config_cluster.yml ~/.kube/config
+su -
+cp /etc/rancher/rke2/rke2.yaml /home/rancher/.kube/config
+chown rancher:rancher /home/rancher/.kube/config
+su - rancher
 ```
 
 Ya tenemos configurado kubectl, ahora si ejecuto un **"kubectl get nodes"** deberia de ver el nodo local
 
 ```console
-NAME             STATUS   ROLES                      AGE   VERSION
-192.168.56.101   Ready    controlplane,etcd,worker   84m   v1.25.6
+NAME           STATUS   ROLES                       AGE   VERSION
+pmoldenhauer   Ready    control-plane,etcd,master   63m   v1.24.12+rke2r1
 ```
 
 Ahora voy a instalar **Helm**
@@ -271,11 +306,28 @@ tar -zxvf helm-v3.11.3-linux-amd64.tar.gz
 mv linux-amd64/helm .local/bin/helm
 ```
 
+### Cert-manager
+
+```console
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.crds.yaml
+helm install \
+  cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace \
+  --version v1.11.0
 ```
+
+### Rancher
+
+```console
+kubectl create namespace cattle-system
+
 helm install rancher rancher-stable/rancher \
   --namespace cattle-system \
   --set hostname=pmoldenhauer.trevenque.es \
-  --set bootstrapPassword=momoEFP \
+  --set bootstrapPassword=<pass> \
   --set ingress.tls.source=letsEncrypt \
   --set letsEncrypt.email=pmoldenhauer@trevenque.es \
   --set letsEncrypt.ingress.class=nginx
