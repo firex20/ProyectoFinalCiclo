@@ -24,6 +24,8 @@ Los requisitos de la maquina virtual que necesitaremos varian segun la cantidad 
 
 En el caso de este proyecto, ya que no voy a manejar una gran cantidad de nodos ni de clusters, usare una maquina con los requisitos minimos, es decir, 2 CPUs y 8GB de RAM. El espacio usado en disco es minimo ya que no vamos a usar realmete este cluster para alojar más maquinas virtuales, con lo cual serviria con 15-20GB.
 
+Por último, tambien necesitaremos un registro DNS que apunte a la maquina. Se puede instalar sin necesidad de un nombre dns usando un nombre falso para testeo.
+
 ### **Sistema operativo**
 
 Rancher es compatible con cualquier sistema operativo linux que tenga instalado un cluster de kubernetes, que a su vez, se puede instalar practicamente en cualquier distribucion linux que sea compatible con Docker. En este proyecto voy a usar <del>la última version de **Rocky Linux** como sistema operativo ya que es un SO opensource, ligero y compatible con todo lo necesario para instalar Rancher.</del> Al final usare una maquina de Ubuntu 22.04 en su version servidor, aunque como ya tenia preparada la instalación en Rocky Linux y la instalación es casi igual, dejare los comandos correspondientes para cada sistema. Usare una instalación minima ya que para instalar todo lo necesario solo me hara falta el sistema base y acceso con ssh.
@@ -93,10 +95,9 @@ firewall-cmd --permanent --add-service=http
 firewall-cmd --permanent --add-service=https
 firewall-cmd --remove-service=ssh --permanent
 firewall-cmd --new-zone=red-interna --permanent
-firewall-cmd --zone=red-interna --add-source=192.168.56.0/24 --permanent
+firewall-cmd --zone=red-interna --add-source=10.200.128.0/24 --permanent
 firewall-cmd --zone=red-interna --add-service=ssh  --permanent
 firewall-cmd --zone=red-interna --add-port=6443/tcp  --permanent
-firewall-cmd --zone=red-interna --add-port=10250/tcp  --permanent
 firewall-cmd --reload
 ```
 
@@ -108,10 +109,9 @@ ufw allow https
 ufw allow 6443
 ufw allow from 172.17.0.0/16
 ufw allow from 10.200.128.0/24
-ufw allow from 127.0.0.1/24
-ufw allow from 217.18.163.165
-ufw allow from 10.42.0.0/16
 ```
+
+Como solo vamos a usar un nodo no hace falta abrir muchos puertos.
 
 ### **Configuración clave ssh**
 
@@ -298,32 +298,77 @@ NAME           STATUS   ROLES                       AGE   VERSION
 pmoldenhauer   Ready    control-plane,etcd,master   63m   v1.24.12+rke2r1
 ```
 
-Ahora voy a instalar **Helm**
+Ahora voy a instalar **Helm**, para ello, lo unico que tengo que hacer es descargarme el fichero binario de la última versión de Helm de la [pagina oficial](https://github.com/helm/helm/releases), descomprimirla, moverla a algun directorio que este añadido en $PATH, en este caso lo voy a poner en ".local/bin/helm" y cambiarle el nombre al fichero a "helm".
 
-```
+```cosole
 wget https://get.helm.sh/helm-v3.11.3-linux-amd64.tar.gz
 tar -zxvf helm-v3.11.3-linux-amd64.tar.gz
 mv linux-amd64/helm .local/bin/helm
 ```
 
+Hay muchas otras maneras de instalar helm, pero esta me ha parecido la más sencilla, sobre todo para más tarde hacerlo de manera automatizada. Ahora que tengo kubectl y helm listos, solo me queda instalar **cert-manager** y rancher.
+
 ### Cert-manager
+
+Cert-manager es un gestor de certificados que es necesario para instalar rancher si queremos tener certificados autofirmados o certificados de letsencrypt de manera automatica. Para instalarlo, ya que es un chart de helm, lo unico que hay que hacer es **añadir el repositorio e instalarlo con helm.**
+
+Añado el repositorio y actualizo la información de los repos con los siguientes comandos:
 
 ```console
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.crds.yaml
+```
+
+Por último instalo Cert-Manager:
+
+```console
 helm install \
   cert-manager jetstack/cert-manager \
   --namespace cert-manager \
   --create-namespace \
-  --version v1.11.0
+  --version v1.11.0 \
+  --set installCRDs=true
 ```
+
+Compruebo que se han iniciado correctamente los pods de cert-manager
+
+```console
+kubectl get pods -n cert-manager
+
+```
+
+Y tambien uso el siguiente comando para comprobar que esta funcionando correctamente:
+
+```console
+cmctl check api
+```
+
+Ya tengo todo listo para instalar rancher y poder acceder a la interfaz web
 
 ### Rancher
 
+Ya solo queda instalar el propio **Rancher**, para ello lo primero que hay que hacer es añadir el repositorio de Rancher que se quiera, hay tres opciones, el repositorio **stable**, que instalara una versión estable y muy testeada de rancher, el repositorio **latest**, que instalara la última versión de rancher disponible y el repositorio **alpha**, que instalara la última versión con todos los cambios ya disponibles que habra en la siguiente versión. Yo he elegido instalar la versión estable.
+
+```console
+helm repo add rancher-stable https://releases.rancher.com/server-charts/stable
+helm repo update
+```
+
+Creo el namespace para rancher, debe tener el nombre "cattle-system"
+
 ```console
 kubectl create namespace cattle-system
+```
+Y porl último, instalamos rancher con helm, hay varias opciones para manejar los certificados de rancher, con certificados autofirmados, con letsencrypt o dandole ficheros de certificados previamente hechos. Para las dos primeras opciones necesitaremos cert-manager, por eso lo instale previamente ya que yo voy a usar la opción de cert-manager.
 
+Las opciones de instalación que pongo más abajo son:
+1. El namespace donde se instalara rancher.
+2. El hostname de rancher, el cual debe ser el nombre dns que apuntara a el servidor.
+3. La contraseña que se usara para acceder a la interfaz de rancher como administrador.
+4. El tipo de manejo de certificados que usaremos, en este caso es letsencrypt.
+5. El controlador de ingress que estemos usando, por defecto es nginx.
+
+```console
 helm install rancher rancher-stable/rancher \
   --namespace cattle-system \
   --set hostname=pmoldenhauer.trevenque.es \
@@ -332,3 +377,18 @@ helm install rancher rancher-stable/rancher \
   --set letsEncrypt.email=pmoldenhauer@trevenque.es \
   --set letsEncrypt.ingress.class=nginx
 ```
+Cuando acabe de instalar, usamos el siguiente comando para ver el progreso del despliege de rancher:
+
+```console
+kubectl -n cattle-system rollout status deploy/rancher
+```
+```console
+Waiting for deployment "rancher" rollout to finish: 0 of 3 updated replicas are available...
+deployment "rancher" successfully rolled out
+```
+
+Una vez que haya acabado, ya estara rancher instalado y podremos acceder a la interfaz web usando el nombre dns. Ya solo queda **añadir el cluster de Harvester** a Rancher.
+
+---
+
+## Conectar el cluster de Harvester
