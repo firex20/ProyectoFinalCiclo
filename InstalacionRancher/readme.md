@@ -387,8 +387,46 @@ Waiting for deployment "rancher" rollout to finish: 0 of 3 updated replicas are 
 deployment "rancher" successfully rolled out
 ```
 
+Y por último tambien se puede usar el siguiente comando para comprobar que todos los pods estan iniciados y funcionando correctamente:
+
+```console
+kubectl -n cattle-system get deploy rancher
+```
+```console
+NAME      DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+rancher   3         3         3            3           3m
+```
+
 Una vez que haya acabado, ya estara rancher instalado y podremos acceder a la interfaz web usando el nombre dns. Ya solo queda **añadir el cluster de Harvester** a Rancher.
 
 ---
 
 ## Conectar el cluster de Harvester
+
+Una vez que tanto Rancher como el cluster de harvester estan funcionando podemos conectar el cluster a Rancher para poder gestionarlo desde ahi y crear de manera facil y automatizada clusteres de kubernetes dentrdo de Harvester, para hacer esto, lo primero que hay que hacer es importar un cluster en rancher en la pestaña del menu de la izquierda **"Virtualization Manager"**.
+
+<img src="Imagenes/CapturaRancher1.png" width="1000">
+
+Dentro de esta pestaña, tenemos que elegir la opción de de **"Import"** que esta arriba a la derecha.
+
+<img src="Imagenes/CapturaRancher2.png" width="1000">
+
+Se abre una pagina donde debemos de poner un nombre para el cluster y podemos elegir que miembros tienen acceso a este cluster, una vez puesto el nombre elegimos la opcion "Create" de abajo a la derecha.
+
+<img src="Imagenes/CapturaRancher3.png" width="1000">
+
+Por último se nos abre la la pestaña del cluster donde nos da las instruciones para unir el cluster de harvester. Para esto, hay que copiar el enlace que nos da aqui y en la **interfaz del cluster de Harvester**.
+
+<img src="Imagenes/CapturaRancher4.png" width="1000">
+
+Aqui hay que ir a "Advanced->Settings". 
+
+<img src="Imagenes/CapturaHarvester1.png" width="1000">
+
+<img src="Imagenes/CapturaHarvester3.png" width="1000">
+
+Y aqui buscamos la opción de **"cluster-registration-url"** y la editamos poniendo la url que copiamos en rancher.
+
+<img src="Imagenes/CapturaHarvester2.png" width="1000">
+
+Al cabo de un rato
