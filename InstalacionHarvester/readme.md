@@ -43,6 +43,10 @@ En el caso de este proyecto, se han usado tres servidores identicos con las sigu
 Una vez instalado el primer nodo y creado el cluster, para añadir un nuevo nodo solo tenemos que seguir las instrucciones anteriores, pero en vez de elegir en la primera opcion crear un cluster nuevo, elegimos añadir a un cluster existente. Todo el resto del proceso sera igual, excepto porque aqui no nos pedira un VIP.
 
 
-Una vez hemos acabado todo el proceso de instalación tenemos que configurar el cluster desde la interfaz web.
+Una vez hemos acabado todo el proceso de instalación para configurar el cluster debemos hacerlo desde la interfaz web. 
+
+---
+
+Ya tengo el cluster de Harvester **preparado y listo** para funcionar, ahora configurare las redes, lo unire a un servidor de **Rancher** externo desde el cual creare un cluster de kubernetes e instalare Argocd para desplegar aplicaciones.
 
 ---
