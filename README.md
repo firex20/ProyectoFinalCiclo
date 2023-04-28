@@ -46,8 +46,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 ## Errores y problemas encontrados durante el desarrollo del proyecto
 - Al intentar instalar harvester conectandolo al switch con el puerto en modo trunk para aceptar vlan tageadas no era posible conectarse, hay que poner el puerto del switch en modo acceso.
 - Al instalar docker para rancher hay que instalar una versión concreta, no sirven las ultimas.
-- Al intentar instalar el chart de helm de rancher sobre RKE hay incompatibilidades con la ultima version, para solocuinarlo he decidido instalar RKE2 en vez de RKE normal.
-- En la configuración del cluster RKE2 hay que configurar el rango de ips para los pods del cluster, ya que puede entrar en conflicto con otras redes, por defecto usa la red 10.43.0.0/16 y la 10.42.0.0/16
+- <del>Al intentar instalar el chart de helm de rancher sobre RKE hay incompatibilidades con la ultima version, para solocuinarlo he decidido instalar RKE2 en vez de RKE normal.</del> (Vuelta a RKE1, ya que habia incompatibilidades con RKE2, conseguido arreglar incompatibilidades de versiones de RKE1 desactivando PSP)
 - Al instalar cert-manager hay que asegurarse de instalar la ultima versión compatible con la versión de kubernetes que se tenga instalada, en la guia oficial de la instalación de rancher hay una versión demasiado antigua y no funcionara.
 ---
 
@@ -64,8 +63,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-rocky-linux-9
 - https://docs.docker.com/engine/install/centos/
 - https://www.tecmint.com/open-port-for-specific-ip-address-in-firewalld/
-- https://docs.rke2.io/install/requirements
-- https://docs.rke2.io/install/quickstart
+- https://www.rancher.com/products/rke
 - https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
 - https://helm.sh/docs/intro/install/
 - https://cert-manager.io/docs/installation/helm/
