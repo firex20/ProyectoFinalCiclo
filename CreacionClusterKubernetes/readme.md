@@ -24,6 +24,8 @@ Una vez creada la imagen se empezara a descargar y la guardara en el almacenamie
 
 Con esto ya tendria la imagen disponible para hacer el cluster de kubernetes desde rancher, pero antes voy a probarla haciendo una maquina virtual en harvester para comprobar que todo funciona correctamente.
 
+---
+
 ## Creación de maquina virtual en Harvester (Prueba de la imagen)
 
 Para crear una maquina virtual en Harvester hay que ir al menu de **"Virtual Machines"** del dashboard de Harvester y ahi pulsar el botón de **"Create"** de arriba a la derecha.
@@ -31,6 +33,8 @@ Para crear una maquina virtual en Harvester hay que ir al menu de **"Virtual Mac
 <img src="Images/ImagenRocky4.PNG" width="1000">
 
 Aqui tendremos que especificar tanto un nombre, descripción y namespace para la maquina como las caracteristicas de la misma, es importante elegir el mismo **namespace** que el de la imagen. Harvester tiene varias plantillas pre-hechas para las maquinas virtuales, yo voy a usar una especifica para imagenes "raw" que vale tambien para "qcow2" y la voy a modificar un poco.
+
+Tambien es importante añadir una clave ssh, ya que generalmente las imagenes cloud estan configuradas para poder solo loggearse con clave publica. Al añadir una clave, harvester la añadira a la maquina durante la creacion de la misma el el usuario root o al que haya asignado por el sistema operativo como usuario por defecto.
 
 <img src="Images/ImagenRocky5.PNG" width="1000">
 
@@ -41,3 +45,11 @@ En la pestaña **"Volumes"** elijo la imagen que he creado antes de rocky linux 
 Por último, es importante cambiar la red default por la red de vm que he preparado para las maquinas virtuales aunque podria dejarla por defecto y usar la red de management sin problema.
 
 <img src="Images/ImagenRocky7.PNG" width="1000">
+
+Despues de unos segundos en los que tarda en iniciar la maquina y recibir una ip por dhcp, puedo acceder a ella con mi clave ssh sin problema.
+
+<img src="Images/ImagenRocky8.PNG" width="1000">
+
+---
+
+## Creación del cluster

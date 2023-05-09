@@ -56,10 +56,11 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 
 ## Documentación y manuales usados para el proyecto
 
-`Instalacion Harvester`
+`Instalacion-Configuración Harvester`
 
 - https://docs.harvesterhci.io/v1.1
 - https://www.balena.io/etcher
+- https://docs.harvesterhci.io/v1.1/advanced/storagenetwork/
 
 `Instalacion Rancher`
 
