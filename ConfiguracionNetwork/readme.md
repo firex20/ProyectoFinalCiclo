@@ -76,15 +76,15 @@ Una vez dentro de la configuración de la red de storage hay que cambiar varias 
 
 Lo último que hay que hacer para terminar de configurar las redes de Harvester sera **asignar la red de Vm** que acabo de crear para que este disponible como tal a la hora de crear maquinas virtuales o clusteres de kubernetes. Para ello, en el menu de la izquerda hay que ir a **"Networks -> VM Networks"**.
 
-<img src="Images/VMConf.PNG" width="1000">
+<img src="Images/VmConf.PNG" width="1000">
 
 Aqui elijo la opción de **"Create"** de arriba a la derecha y se habre una ventana donde se pueden elegir varias opciones. En este caso hay que modificar varias, lo primero sera ponerle un **nombre y descripción** a la red virtual, lo siguiente es elegir el **tipo de red**, sera una red vlan tagueada, elijo una **id para la vlan**, 129, y por último elijo la **red del cluster** que se va a usar, vm-net. En la pestaña **"Route"** de la izquierda podemos cambiar las opciones de routeo de la red, en este caso lo dejare automatico por dhcp ya que hay un dhcp funcionando en la red, pero podria poner el gateway y el rango de ips de manera manual. Pulso el boton de **"Create"** De abajo a la derecha.
 
-<img src="Images/VMConf2.PNG" width="1000">
+<img src="Images/VmConf2.PNG" width="1000">
 
 En el menu anterior veremos la nueva red vm creada, si esperamos unos segundos deberiamos de ver el estado **"Active"** en la columna de "Route connectivity", esto siginifica que la red esta funcionando correctamente.
 
-<img src="Images/VMConf3.PNG" width="1000">
+<img src="Images/VmConf3.PNG" width="1000">
 
 ---
 

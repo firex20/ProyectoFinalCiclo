@@ -31,8 +31,9 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
     - Documentación ✅
     - Automatizacion con ansible ❌
 - Crear cluster de kubernetes desde rancher y testearlo
-    - Funcion ❌
-    - Documentación ❌
+    - Creación imagen SO ✅
+    - Creación cluster ✅
+    - Documentación ✅
 - Instalar ArgoCD y configurarlo
     - Funcion ❌
     - Documentación ❌
@@ -72,6 +73,10 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://cert-manager.io/docs/installation/helm/
 - https://www.rancher.com/
 - https://ranchermanager.docs.rancher.com
+
+`Cluster Kubernetes`
+
+- http://download.rockylinux.org/pub/rocky/9.1/images/x86_64/
 
 ---
 
