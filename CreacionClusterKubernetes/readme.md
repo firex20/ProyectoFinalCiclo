@@ -109,3 +109,35 @@ Por último pulso el botón de "Create" y empezara la creación del cluster de m
 Si voy a el dashboard de Harvester y miro la sección de "Virtual Machines" vere que se han creado automaticamente las maquinas de los nodos.
 
 <img src="Images/Captura13.PNG" width="1000">
+
+Una vez el cluster este creado y en funcionamiento, pasara a el estado **activo**. 
+
+<img src="Images/Captura14.PNG" width="1000">
+
+Si quisiese escalar o desescalar el cluster se puede hacer facilmente desde esta misma pagina de **"Cluster Management"**, simplemente pulsando en los botones de añadir o quitar maquinas de cada pool, aunque siempre teniendo en cuenta que debe haber 1, 3 o 5 maquinas con el rol etcd.
+
+<img src="Images/Captura15.PNG" width="1000">
+
+<img src="Images/Captura16.PNG" width="1000">
+
+---
+
+## Administrar el nuevo cluster
+
+Una vez esta creado el cluster, podemos acceder a su pantalla de administración desde el dashboard principal de rancher o desde el menu expadible de la izquierda.
+
+<img src="Images/Admin1.PNG" width="1000">
+
+<img src="Images/Admin2.PNG" width="1000">
+
+Si entramos en la pagina del cluster podremos ver toda la **información disponible** del cluster, hosts, carga de cpu y ram, deployments, pods, etc.
+
+Ademas de esto, arriba a la derecha tenemos varias opciones para administrar el cluster, podemos abrir directamente una terminal con **kubectl**, podemos copiar o descargar el fichero de **kubeconfig**, podemos importar archivos yaml al cluster o usar el **buscador de recursos** para encontrarlos de manera rapida. Ahi tambien podemos elegir que **namespaces** podemos ver.
+
+<img src="Images/Admin3.PNG" width="1000">
+
+<img src="Images/Admin4.PNG" width="1000">
+
+*Hay que tener en cuenta que solo se podra acceder a kubectl desde rancher o con el archivo de kubeconfig en un equipo que este conectado a la misma red que el cluster*
+
+Ya tengo el **cluster creado y funcionando**, ahora podria empezar a desplegar aplicaciones a traves de deployments y servicios como con cualquier otro cluster de kubernetes. Pero antes de hacer esto, voy a instalar un gestor con interfaz web para conectar, desplegar y mantener actualizados automaticamente proyectos de kubernetes desde Helm o github llamado **ArgoCD**.
