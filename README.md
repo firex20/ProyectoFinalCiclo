@@ -35,8 +35,8 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
     - Creación cluster ✅
     - Documentación ✅
 - Instalar ArgoCD y configurarlo
-    - Funcion ❌
-    - Documentación ❌
+    - Funcion ✅
+    - Documentación ✅
 - Desplegar alguna aplicación desde gitHub o Helm
     - Funcion ❌
     - Documentación ❌
@@ -80,6 +80,12 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 
 - https://dl.rockylinux.org/vault/rocky/9.0/images/x86_64/
 - https://cloud.debian.org/images/cloud/bullseye/latest/
+
+`ArgoCD`
+- https://argo-cd.readthedocs.io/en/stable/
+- https://argo-cd.readthedocs.io/en/stable/getting_started/
+- https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/
+
 
 ---
 
