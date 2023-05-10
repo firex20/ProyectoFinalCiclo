@@ -31,8 +31,9 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
     - Documentación ✅
     - Automatizacion con ansible ❌
 - Crear cluster de kubernetes desde rancher y testearlo
-    - Funcion ❌
-    - Documentación ❌
+    - Creación imagen SO ✅
+    - Creación cluster ✅
+    - Documentación ✅
 - Instalar ArgoCD y configurarlo
     - Funcion ❌
     - Documentación ❌
@@ -51,14 +52,16 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - Al instalar docker para rancher hay que instalar una versión concreta, no sirven las ultimas.
 - <del>Al intentar instalar el chart de helm de rancher sobre RKE hay incompatibilidades con la ultima version, para solocuinarlo he decidido instalar RKE2 en vez de RKE normal.</del> (Vuelta a RKE1, ya que habia incompatibilidades con RKE2, conseguido arreglar incompatibilidades de versiones de RKE1 desactivando PSP)
 - Al instalar cert-manager hay que asegurarse de instalar la ultima versión compatible con la versión de kubernetes que se tenga instalada, en la guia oficial de la instalación de rancher hay una versión demasiado antigua y no funcionara.
+- Al intentar crear un cluster kubernetes con rancher usando la imagen de Rocky Linux da un fallo al detectar la ip, he cambiado la imagen a debian 11.
 ---
 
 ## Documentación y manuales usados para el proyecto
 
-`Instalacion Harvester`
+`Instalacion-Configuración Harvester`
 
 - https://docs.harvesterhci.io/v1.1
 - https://www.balena.io/etcher
+- https://docs.harvesterhci.io/v1.1/advanced/storagenetwork/
 
 `Instalacion Rancher`
 
@@ -72,6 +75,11 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://cert-manager.io/docs/installation/helm/
 - https://www.rancher.com/
 - https://ranchermanager.docs.rancher.com
+
+`Cluster Kubernetes`
+
+- https://dl.rockylinux.org/vault/rocky/9.0/images/x86_64/
+- https://cloud.debian.org/images/cloud/bullseye/latest/
 
 ---
 
