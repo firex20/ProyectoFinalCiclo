@@ -35,8 +35,8 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
     - Creación cluster ✅
     - Documentación ✅
 - Instalar ArgoCD y configurarlo
-    - Funcion ❌
-    - Documentación ❌
+    - Funcion ✅
+    - Documentación ✅
 - Desplegar alguna aplicación desde gitHub o Helm
     - Funcion ❌
     - Documentación ❌
@@ -53,6 +53,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - <del>Al intentar instalar el chart de helm de rancher sobre RKE hay incompatibilidades con la ultima version, para solocuinarlo he decidido instalar RKE2 en vez de RKE normal.</del> (Vuelta a RKE1, ya que habia incompatibilidades con RKE2, conseguido arreglar incompatibilidades de versiones de RKE1 desactivando PSP)
 - Al instalar cert-manager hay que asegurarse de instalar la ultima versión compatible con la versión de kubernetes que se tenga instalada, en la guia oficial de la instalación de rancher hay una versión demasiado antigua y no funcionara.
 - Al intentar crear un cluster kubernetes con rancher usando la imagen de Rocky Linux da un fallo al detectar la ip, he cambiado la imagen a debian 11.
+- Al crear un proyecto en argocd pone que no tengo permisos para ello. Solucionado creando roles y un nuevo proyecto de argocd
 ---
 
 ## Documentación y manuales usados para el proyecto
@@ -80,6 +81,13 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 
 - https://dl.rockylinux.org/vault/rocky/9.0/images/x86_64/
 - https://cloud.debian.org/images/cloud/bullseye/latest/
+
+`ArgoCD`
+- https://argo-cd.readthedocs.io/en/stable/
+- https://argo-cd.readthedocs.io/en/stable/getting_started/
+- https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/
+- https://devpress.csdn.net/k8s/62fcc33e7e66823466190886.html
+
 
 ---
 
