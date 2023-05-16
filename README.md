@@ -18,16 +18,16 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 ## To-Do ✅ ❌ 🔜
 
 - Preparar la infraestructura fisica
-    - Funcion ✅
+    - Función ✅
     - Documentación ✅
 - Instalar Harvester y crear el cluster
-    - Funcion ✅
+    - Función ✅
     - Documentación ✅
 - Configuración de la network en el cluster
-    - Funcion ✅
+    - Función ✅
     - Documentación ✅
 - Instalar Rancher y conectarlo con Harvester
-    - Funcion ✅
+    - Función ✅
     - Documentación ✅
     - Automatizacion con ansible ❌
 - Crear cluster de kubernetes desde rancher y testearlo
@@ -35,11 +35,14 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
     - Creación cluster ✅
     - Documentación ✅
 - Instalar ArgoCD y configurarlo
-    - Funcion ✅
+    - Función ✅
     - Documentación ✅
 - Desplegar alguna aplicación desde gitHub o Helm
-    - Funcion ❌
+    - Función ❌
     - Documentación ❌
+- Configurar acceso a las aplicaciones desde internet con haproxy/ingress
+    - Función ✅
+    - Documentación ✅
 - Documento final recopilando toda la información del proyecto
 - Preparar la presentacion y una prueba de despliegue
 - (Extra) Instalar Prometheus y Grafana para control de recursos
@@ -51,9 +54,11 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - Al intentar instalar harvester conectandolo al switch con el puerto en modo trunk para aceptar vlan tageadas no era posible conectarse, hay que poner el puerto del switch en modo acceso.
 - Al instalar docker para rancher hay que instalar una versión concreta, no sirven las ultimas.
 - <del>Al intentar instalar el chart de helm de rancher sobre RKE hay incompatibilidades con la ultima version, para solocuinarlo he decidido instalar RKE2 en vez de RKE normal.</del> (Vuelta a RKE1, ya que habia incompatibilidades con RKE2, conseguido arreglar incompatibilidades de versiones de RKE1 desactivando PSP)
-- Al instalar cert-manager hay que asegurarse de instalar la ultima versión compatible con la versión de kubernetes que se tenga instalada, en la guia oficial de la instalación de rancher hay una versión demasiado antigua y no funcionara.
+- Al instalar cert-manager hay que asegurarse de instalar la ultima versión compatible con la versión de kubernetes que se tenga instalada, en la guia oficial de la instalación de rancher hay una versión demasiado antigua y no funciónara.
 - Al intentar crear un cluster kubernetes con rancher usando la imagen de Rocky Linux da un fallo al detectar la ip, he cambiado la imagen a debian 11.
 - Al crear un proyecto en argocd pone que no tengo permisos para ello. Solucionado creando roles y un nuevo proyecto de argocd
+- La configuración de haproxy no se puede compartir con un configmap debido a que tiene una sintaxis estricta que no es compatible con el formato.
+- Para poder acceder a aplicaciones que tienen su propio certificado tls he tenido que activar el ssl-passthrough en los clusteres tanto local de rancher como el de argocd.
 ---
 
 ## Documentación y manuales usados para el proyecto
@@ -87,6 +92,14 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://argo-cd.readthedocs.io/en/stable/getting_started/
 - https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/
 - https://devpress.csdn.net/k8s/62fcc33e7e66823466190886.html
+
+`HaProxy`
+- https://www.haproxy.com/blog/haproxy-configuration-basics-load-balance-your-servers/
+- https://hub.docker.com/_/haproxy
+- https://ranchermanager.docs.rancher.com/how-to-guides/new-user-guides/kubernetes-resources-setup/encrypt-http-communication
+- https://www.suse.com/support/kb/doc/?id=000020147
+- https://serversforhackers.com/c/using-ssl-certificates-with-haproxy
+- https://rancher.support/training/rke/rke-cluster-yaml-breakdown/#ingress
 
 
 ---

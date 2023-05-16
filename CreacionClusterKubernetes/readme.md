@@ -96,6 +96,21 @@ He añadido otra **Node pool** con la misma plantilla de worker pero sin etcd pa
 
 <img src="Images/Captura9.PNG" width="1000">
 
+Ahora voy, al igual que hice en el cluster de rancher, voy a activar la posibilidad de **"ssl-pass-through"**, para ello, abajo en la sección de "Cluster Options" pulso en el botón "Edit as YAML".
+
+<img src="Images/SSL-Pass1.PNG" width="1000">
+
+Haciendo esto se abre un editor con el yaml que tiene todas las configuraciones de el cluster que se va a crear, para activar el ssl-pass-through hay que añadir las siguientes lineas debajo de la sección **"ingress"**:
+
+```yaml
+extra_args:
+  enable-ssl-passthrough: true
+```
+
+Quedara de la siguiente forma:
+
+<img src="Images/SSL-Pass2.PNG" width="1000">
+
 Hechas estas configuraciones, no haria falta tocar nada más a parte de darle un nombre al cluster que vamos a crear, pero en caso de ser necesario o querer especificar alguna configuración más avanzada del cluster, como los usuarios de rancher que tienen acceso a este cluster o la versión de RKE que vamos a instalar, se puede hacer con el resto de **opciones de creación del cluster**. En este cluster he dejado las opciones por defecto.
 
 <img src="Images/Captura10.PNG" width="1000">

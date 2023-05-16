@@ -236,6 +236,8 @@ rke
 ```
 A continuación tengo que preparar la **configuración del cluster** dentro de un archivo llamado "cluster.yml", voy a usar el [ejemplo de configuración minima](https://rke.docs.rancher.com/example-yamls#minimal-cluster-yml-example) que proporciona rke y lo modifico para que se adecue a mi servidor.
 
+A parte de modificar la ip y el nombre del usuario, voy a añadir una configuración de ingress para activar el **"ssl-pass-through"**, esto sera necesario para poder exponer publicamente a internet ciertas aplicaciones con ssl una vez que este el cluster final funcionando.
+
 ```yml
 nodes:
     - address: <ip_publica>
