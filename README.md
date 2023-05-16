@@ -54,6 +54,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - Al instalar cert-manager hay que asegurarse de instalar la ultima versión compatible con la versión de kubernetes que se tenga instalada, en la guia oficial de la instalación de rancher hay una versión demasiado antigua y no funcionara.
 - Al intentar crear un cluster kubernetes con rancher usando la imagen de Rocky Linux da un fallo al detectar la ip, he cambiado la imagen a debian 11.
 - Al crear un proyecto en argocd pone que no tengo permisos para ello. Solucionado creando roles y un nuevo proyecto de argocd
+- La configuración de haproxy no se puede compartir con un configmap debido a que tiene una sintaxis estricta que no es compatible con el formato.
 - Para poder acceder a aplicaciones que tienen su propio certificado tls he tenido que activar el ssl-passthrough en los clusteres tanto local de rancher como el de argocd.
 ---
 
