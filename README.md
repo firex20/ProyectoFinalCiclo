@@ -38,15 +38,15 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
     - Función ✅
     - Documentación ✅
 - Desplegar alguna aplicación desde gitHub o Helm
-    - Función ❌
-    - Documentación ❌
+    - Función ✅
+    - Documentación ✅
 - Configurar acceso a las aplicaciones desde internet con haproxy/ingress
     - Función ✅
     - Documentación ✅
-- Documento final recopilando toda la información del proyecto
-- Preparar la presentacion y una prueba de despliegue
-- (Extra) Instalar Prometheus y Grafana para control de recursos
-- (Extra) Crear interfaz web propia para gestionar/desplegar aplicaciones
+- Documento final recopilando toda la información del proyecto ❌
+- Preparar la presentacion y una prueba de despliegue ❌
+- (Extra) Instalar Prometheus y Grafana para control de recursos ❌
+- (Extra) Crear aplicación web propia y chart de helm para desplegarla ❌
 
 ---
 
