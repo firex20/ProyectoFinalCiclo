@@ -38,15 +38,15 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
     - Función ✅
     - Documentación ✅
 - Desplegar alguna aplicación desde gitHub o Helm
-    - Función ❌
-    - Documentación ❌
+    - Función ✅
+    - Documentación ✅
 - Configurar acceso a las aplicaciones desde internet con haproxy/ingress
     - Función ✅
     - Documentación ✅
-- Documento final recopilando toda la información del proyecto
-- Preparar la presentacion y una prueba de despliegue
-- (Extra) Instalar Prometheus y Grafana para control de recursos
-- (Extra) Crear interfaz web propia para gestionar/desplegar aplicaciones
+- Documento final recopilando toda la información del proyecto ❌
+- Preparar la presentacion y una prueba de despliegue ❌
+- (Extra) Instalar Prometheus y Grafana para control de recursos ❌
+- (Extra) Crear aplicación web propia y chart de helm para desplegarla ❌
 
 ---
 
@@ -92,6 +92,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://argo-cd.readthedocs.io/en/stable/getting_started/
 - https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/
 - https://devpress.csdn.net/k8s/62fcc33e7e66823466190886.html
+- https://github.com/argoproj/argocd-example-apps
 
 `HaProxy`
 - https://www.haproxy.com/blog/haproxy-configuration-basics-load-balance-your-servers/
@@ -100,6 +101,11 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://www.suse.com/support/kb/doc/?id=000020147
 - https://serversforhackers.com/c/using-ssl-certificates-with-haproxy
 - https://rancher.support/training/rke/rke-cluster-yaml-breakdown/#ingress
+
+`Ansible`
+- https://fabianlee.org/2021/05/29/ansible-orchestrating-ssh-access-through-a-bastion-host/
+- https://docs.ansible.com/
+- https://ansible-lint.readthedocs.io/configuring/
 
 
 ---
