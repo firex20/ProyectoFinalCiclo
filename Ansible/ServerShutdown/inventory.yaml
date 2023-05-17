@@ -1,0 +1,22 @@
+---
+rancher:
+  hosts:
+    pmoldenhauer.trevenque.es:
+  vars:
+    ansible_user: gtk
+    ansible_ssh_private_key_file: /home/pedro/.ssh/id_rsa
+
+harvester:
+  hosts:
+    10.200.128.51:
+    10.200.128.52:
+    10.200.128.53:
+  vars:
+    ansible_ssh_common_args: "-o ProxyCommand=\"ssh -q gtk@pmoldenhauer.trevenque.es -o IdentityFile=/home/pedro/.ssh/id_rsa -o Port=22 -W %h:%p\""
+    ansible_user: rancher
+    ansible_ssh_private_key_file: /home/pedro/.ssh/id_rsa
+
+all:
+  children:
+    rancher:
+    harvester:
