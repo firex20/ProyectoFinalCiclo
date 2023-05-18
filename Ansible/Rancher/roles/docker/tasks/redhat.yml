@@ -1,0 +1,12 @@
+---
+- name: Add Docker repository.
+  ansible.builtin.yum_repository:
+    name: docker
+    description: docker YUM repo
+    baseurl: https://download.docker.com/linux/centos/docker-ce.repo
+
+#- name: Install firewalld in redhat.
+#  ansible.builtin.yum:
+#    update_cache: true
+#    name: "firewalld"
+#    state: present
