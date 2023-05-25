@@ -1,0 +1,78 @@
+---
+# tasks file for rke
+- name: Install acl and git pre-requisite.
+  ansible.builtin.package:
+    name: 
+      - acl
+      - git
+    state: present
+  
+- name: Add the user 'rancher'.
+  ansible.builtin.user:
+    name: rancher
+    shell: /bin/bash
+    groups: docker
+    append: yes
+
+- name: Make the directory /home/rancher/.ssh if it doesnt exits.
+  ansible.builtin.file:
+    path: /home/rancher/.ssh
+    state: directory
+    mode: '0700'
+    owner: rancher
+
+- name: Generate an OpenSSH keypair for rancher user.
+  become: true
+  become_user: rancher
+  community.crypto.openssh_keypair:
+    path: /home/rancher/.ssh/id_rsa
+  register: ssh_keys
+
+- name: Set authorized key for rancher.
+  become: true
+  become_user: rancher
+  shell: 'cat /home/rancher/.ssh/id_rsa.pub > /home/rancher/.ssh/authorized_keys'
+  when: ssh_keys is changed
+
+- name: Add .local/bin to $PATH.
+  copy:
+    dest: /etc/profile.d/custom-path.sh
+    content: 'PATH=$PATH:/home/rancher/.local/bin'
+  when: ansible_env.PATH is not search(':/home/rancher/.local/bin')
+
+- name: Make the directory /home/rancher/.local/bin if it doesnt exits.
+  ansible.builtin.file:
+    path: /home/rancher/.local/bin
+    state: directory
+    mode: '0770'
+    group: docker
+    owner: rancher
+
+- name: Download rke binary.
+  ansible.builtin.get_url:
+    url: https://github.com/rancher/rke/releases/download/v1.4.5/rke_linux-amd64
+    dest: /home/rancher/.local/bin/rke
+    mode: '0550'
+    group: docker
+    owner: rancher
+  register: rke_binary
+
+- name: Generate config for RKE cluster.
+  template:
+    src: cluster.yml.j2
+    dest: /home/rancher/cluster.yml
+    backup: true
+    mode: 0640
+    group: docker
+    owner: rancher
+  register: rke_cluster_config
+
+- name: Run RKE installer
+  become: true
+  become_method: su
+  become_exe: sudo su -
+  become_user: rancher
+  shell: "/home/rancher/.local/bin/rke up"
+  args:
+    chdir: "/home/rancher"
+  when: rke_binary is changed or rke_cluster_config is changed

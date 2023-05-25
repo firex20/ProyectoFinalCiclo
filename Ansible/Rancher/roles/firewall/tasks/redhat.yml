@@ -1,5 +1,5 @@
 ---
-- name: Install firewalld in redhat.
+- name: Centos - Install firewalld in redhat.
   ansible.builtin.yum:
     update_cache: true
     name: "firewalld"

@@ -29,7 +29,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - Instalar Rancher y conectarlo con Harvester
     - Función ✅
     - Documentación ✅
-    - Automatizacion con ansible ❌
+    - Automatizacion con ansible ✅
 - Crear cluster de kubernetes desde rancher y testearlo
     - Creación imagen SO ✅
     - Creación cluster ✅
@@ -106,6 +106,8 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://fabianlee.org/2021/05/29/ansible-orchestrating-ssh-access-through-a-bastion-host/
 - https://docs.ansible.com/
 - https://ansible-lint.readthedocs.io/configuring/
+- https://www.redhat.com/sysadmin/ansible-templates-configuration
+- https://www.buggycoder.com/ansible-error-failed-to-set-permissions/
 
 
 ---

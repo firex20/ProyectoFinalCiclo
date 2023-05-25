@@ -7,3 +7,9 @@
 - name: Installation for debian.
   import_tasks: debian.yml
   when: ansible_facts['os_family']|lower == 'debian'
+
+- name: Start and enable Docker service.
+  ansible.builtin.systemd:
+    name: docker.service
+    enabled: true
+    state: started
