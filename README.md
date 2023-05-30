@@ -93,6 +93,8 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/
 - https://devpress.csdn.net/k8s/62fcc33e7e66823466190886.html
 - https://github.com/argoproj/argocd-example-apps
+- https://artifacthub.io/packages/helm/bitnami/nginx
+- https://github.com/gd4Ark/star-battle
 
 `HaProxy`
 - https://www.haproxy.com/blog/haproxy-configuration-basics-load-balance-your-servers/
