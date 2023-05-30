@@ -1,8 +1,8 @@
 # Instalación del gestor Rancher en una maquia virtual y conexión con el cluster de Harvester
 
-Rancher es un **gestor de clusters de kubernetes** que permite manejar varios clusters a la vez de distintos tipos, tanto clusteres on-premise como en la nube.
+Rancher es un **gestor de clusters de kubernetes** que permite manejar varios clusters a la vez de distintos tipos, tanto clusteres **on-premise** como en **la nube**.
 
-En este documento voy a explicar como he instalado Rancher en una maquina virtual de manera manual, pero tendre preparado un playbook de ansible para hacerlo todo de manera automatica a traves de ssh.
+En este documento voy a explicar como he instalado Rancher en una maquina virtual de manera manual, pero tengo preparado un **playbook de ansible** para hacerlo todo de manera automática a traves de ssh.
 
 ---
 
@@ -10,9 +10,11 @@ En este documento voy a explicar como he instalado Rancher en una maquina virtua
 
 ### **Requisitos**
 
-Para instalar Rancher debemos tener un entorno con **Kubernetes** instalado, ya sea en un solo nodo o en varios. También tenemos otras opciones de instalacion como por ejemplo una instalacion autamatica desde EKS de amazon o una instalacion dentro de un contenedor de kubernetes. En este proyecto voy a usar una unica **maquina virtual** fuera del cluster de Harvester de este proyecto pero dentro de la red de la empresa, ya que los servidores no van a tener acceso directo desde fuera con ip publica, si no que sera la propia maquina de Rancher a la que se podra acceder desde fuera. Tampoco voy a usar el contenedor de Docker ya que esta recomendado solo para entornos de prueba.
+Para instalar Rancher debemos tener un entorno con **Kubernetes** instalado, ya sea en un solo nodo o en varios. También tenemos otras **opciones de instalación**, como por ejemplo una instalación autamatica desde EKS de amazon o una instalación dentro de un contenedor de docker. 
 
-Los requisitos de la maquina virtual que necesitaremos varian segun la cantidad de cluster y nodos que vayamos a manejar con esta instancia de Rancher, tambien depende de el tipo de instalación que se vaya a realizar, en mi caso, como voy a hacer un cluster de un solo nodo de kubernetes para alojar el servidor de Rancher los requisitos que se aplican son los siguientes:
+En este proyecto voy a usar una única **maquina virtual** fuera del cluster de Harvester de este proyecto pero dentro de la red de la empresa, ya que los servidores no van a tener acceso directo desde fuera con ip publica, si no que sera la propia maquina de Rancher a la que se podra acceder desde fuera. Tampoco voy a usar el contenedor de Docker ya que esta recomendado solo para entornos de prueba.
+
+Los **requisitos de la maquina virtual** que necesitaremos varian según la cantidad de cluster y nodos que vayamos a manejar con esta instancia de Rancher, también depende de el tipo de instalación que se vaya a realizar, en este caso, como voy a hacer un cluster de un solo nodo de kubernetes para alojar el servidor de Rancher, los requisitos que se aplican son los siguientes:
 
 | Deployment Size | Clusters | Nodes | vCPUs | RAM |
 |------------------|----------|-------|-------|-----|
@@ -22,29 +24,29 @@ Los requisitos de la maquina virtual que necesitaremos varian segun la cantidad 
 | X-Large | Up to 1000 | Up to 10,000 | 16 | 64 GB |
 | XX-Large | Up to 2000 | Up to 20,000 | 32 | 128 GB |
 
-En el caso de este proyecto, ya que no voy a manejar una gran cantidad de nodos ni de clusters, usare una maquina con los requisitos minimos, es decir, 2 CPUs y 8GB de RAM. El espacio usado en disco es minimo ya que no vamos a usar realmete este cluster para alojar más maquinas virtuales, con lo cual serviria con 15-20GB.
+En el caso de este proyecto, ya que no voy a manejar una gran cantidad de nodos ni de clusters, usare una maquina con los **requisitos minimos**, es decir, 2 CPUs y 8GB de RAM. El **espacio usado en disco** es minimo ya que no voy a usar realmete este cluster para otra cosa a parte de Rancher, con lo cual serviria con 25-30GB.
 
-Por último, tambien necesitaremos un registro DNS que apunte a la maquina. Se puede instalar sin necesidad de un nombre dns usando un nombre falso para testeo.
+Por último, tambien necesitare un **registro DNS** que apunte a la maquina. Se podria instalar sin necesidad de un nombre dns usando un nombre falso para testeo.
 
 ### **Sistema operativo**
 
-Rancher es compatible con cualquier sistema operativo linux que tenga instalado un cluster de kubernetes, que a su vez, se puede instalar practicamente en cualquier distribucion linux que sea compatible con Docker. En este proyecto voy a usar <del>la última version de **Rocky Linux** como sistema operativo ya que es un SO opensource, ligero y compatible con todo lo necesario para instalar Rancher.</del> Al final usare una maquina de Ubuntu 22.04 en su version servidor, aunque como ya tenia preparada la instalación en Rocky Linux y la instalación es casi igual, dejare los comandos correspondientes para cada sistema. Usare una instalación minima ya que para instalar todo lo necesario solo me hara falta el sistema base y acceso con ssh.
+Rancher es compatible con **cualquier sistema operativo linux** que tenga instalado un cluster de kubernetes, que a su vez, se puede instalar practicamente en **cualquier distribucion linux que sea compatible con Docker**. En este proyecto voy a usar una maquina de Ubuntu 22.04 en su version servidor, aunque como ya tenia preparada la instalación en Rocky Linux y la instalación es casi igual, dejare los comandos correspondientes para cada sistema. Usare una **instalación minima** ya que para instalar todo lo necesario solo me hara falta el sistema base y acceso con ssh.
 
-Una vez instalado el sistema operativo procedo a empezar a instalar todos los paquetes necesarios para Rancher.
+Una vez instalado el sistema operativo procedo a empezar a instalar todos los **paquetes necesarios para Rancher**.
 
 ### **Configuracion basica del firewall**
 
-Tras acceder al servidor como root, lo primero que hay que hacer es securizar con un firewall el acceso a este servidor ya que va a estar expuesto a internet, para ello instalo e inicio el paquete de **firewalld**:
+Tras acceder al servidor como **root**, lo primero que hay que hacer es **securizar** con un **firewall** el acceso a este servidor ya que va a estar expuesto a internet, para ello instalo e inicio el paquete de **firewalld**:
 
 ```console
 dnf install firewalld -y
 systemctl start firewalld
 ```
 
-**(En Ubuntu no hace falta instalar el firewall, pero usare ufw ya que ya viene instalado por defecto en el sistema)**
+**(En Ubuntu no hace falta instalar el firewall ya que usare ufw que ya viene instalado por defecto en el sistema)**
 
 
-Normalmente antes de iniciar cualquier firewall habria que permitir primero el acceso ssh a el servidor para no quedarnos sin conexion con el servidor, pero la configuración por defecto de firewalld ya permite conexiones ssh. Para ufw si que hara falta permitir el servicio ssh antes de iniciar el firewall:
+Normalmente, antes de iniciar cualquier firewall habría que **permitir primero el acceso ssh a el servidor** para no quedarnos sin conexion con el servidor, pero la configuración por defecto de firewalld ya permite conexiones ssh. Para ufw si que hara falta permitir el servicio ssh antes de iniciar el firewall:
 
 ```console
 ufw allow from <IpPermitida> proto tcp to any port 22
@@ -64,7 +66,7 @@ abr 24 07:32:55 pmoldenhauer systemd[1]: Starting Uncomplicated firewall...
 abr 24 07:32:56 pmoldenhauer systemd[1]: Finished Uncomplicated firewall.
 ```
 
-En este caso solo permitire las ips de trevenque para que solo se pueda acceder al ssh desde dentro del cloud center. En rocky linux tambien hare lo mismo pero creando una zona con las ips permitidas.
+En este caso **solo permitire las ips de trevenque** para que solo se pueda acceder al ssh desde dentro del cloud center. En rocky linux tambien hare lo mismo pero creando una zona con las ips permitidas.
 
 Para comprobar que se ha iniciado correctamente el firewall:
 
@@ -88,7 +90,7 @@ Apr 20 10:30:57 localhost systemd[1]: Starting firewalld - dynamic firewall daem
 Apr 20 10:30:58 localhost systemd[1]: Started firewalld - dynamic firewall daemon.
 ```
 
-Por último, añado los servicios y puertos que me van a hacer falta para acceder a Rancher y limito el acceso ssh solo para la red interna.
+Por último, **añado los servicios y puertos** que me van a hacer falta para acceder a Rancher y limito el acceso ssh solo para la red interna.
 
 ```console
 firewall-cmd --permanent --add-service=http
@@ -111,7 +113,7 @@ ufw allow from 172.17.0.0/16
 ufw allow from 10.200.128.0/24
 ```
 
-Como solo vamos a usar un nodo no hace falta abrir muchos puertos.
+Como solo voy a usar un nodo no hace falta abrir muchos puertos.
 
 ### **Configuración clave ssh**
 
@@ -410,33 +412,33 @@ Una vez que haya acabado, ya estara rancher instalado y podremos acceder a la in
 
 Una vez que tanto Rancher como el cluster de harvester estan funcionando podemos conectar el cluster a Rancher para poder gestionarlo desde ahi y crear de manera facil y automatizada clusteres de kubernetes dentrdo de Harvester, para hacer esto, lo primero que hay que hacer es importar un cluster en rancher en la pestaña del menu de la izquierda **"Virtualization Manager"**.
 
-<img src="Imagenes/CapturaRancher1.PNG" width="1000">
+<img src="Images/CapturaRancher1.PNG" width="1000">
 
 Dentro de esta pestaña, tenemos que elegir la opción de de **"Import"** que esta arriba a la derecha.
 
-<img src="Imagenes/CapturaRancher2.PNG" width="1000">
+<img src="Images/CapturaRancher2.PNG" width="1000">
 
 Se abre una pagina donde debemos de poner un nombre para el cluster y podemos elegir que miembros tienen acceso a este cluster, una vez puesto el nombre elegimos la opcion "Create" de abajo a la derecha.
 
-<img src="Imagenes/CapturaRancher3.PNG" width="1000">
+<img src="Images/CapturaRancher3.PNG" width="1000">
 
 Por último se nos abre la la pestaña del cluster donde nos da las instruciones para unir el cluster de harvester. Para esto, hay que copiar el enlace que nos da aqui y en la **interfaz del cluster de Harvester**.
 
-<img src="Imagenes/CapturaRancher4.PNG" width="1000">
+<img src="Images/CapturaRancher4.PNG" width="1000">
 
 Aqui hay que ir a "Advanced->Settings". 
 
-<img src="Imagenes/CapturaHarvester1.png" width="1000">
+<img src="Images/CapturaHarvester1.png" width="1000">
 
-<img src="Imagenes/CapturaHarvester3.png" width="1000">
+<img src="Images/CapturaHarvester3.png" width="1000">
 
 Y aqui buscamos la opción de **"cluster-registration-url"** y la editamos poniendo la url que copiamos en rancher.
 
-<img src="Imagenes/CapturaHarvester2.png" width="1000">
+<img src="Images/CapturaHarvester2.png" width="1000">
 
 En pocos segundos, podremos ver que el cluster ya esta añadido y activo en el menu "Virtualization Manager" de Rancher y podremos acceder a la **interfaz web de Harvester** pulsando sobre el nombre del cluster.
 
-<img src="Imagenes/CapturaRancher5.PNG" width="1000">
+<img src="Images/CapturaRancher5.PNG" width="1000">
 
 ---
 
