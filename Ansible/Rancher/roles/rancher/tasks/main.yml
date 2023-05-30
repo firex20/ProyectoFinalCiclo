@@ -1,0 +1,35 @@
+---
+# tasks file for rancher
+- name: Add rancher-stable repo.
+  kubernetes.core.helm_repository:
+    binary_path: /home/rancher/.local/bin/helm
+    name: rancher-stable
+    repo_url: "https://releases.rancher.com/server-charts/stable"
+
+- name: Url name.
+  debug:
+    msg: "{{ rancher_hostname }}"
+  tags: [ never, debug ]
+
+- name: Deploy stable version of rancher.
+  kubernetes.core.helm:
+    binary_path: /home/rancher/.local/bin/helm
+    atomic: true
+    update_repo_cache: true
+    name: rancher
+    chart_ref: rancher-stable/rancher
+    release_namespace: cattle-system
+    create_namespace: true
+    set_values:
+      - value: hostname="{{ rancher_hostname }}"
+        value_type: raw
+      - value: bootstrapPassword="{{ rancher_pass }}"
+        value_type: raw
+      - value: ingress.tls.source="{{ tls_source }}"
+        value_type: raw
+      - value: letsEncrypt.email="{{ letsEncrypt_email }}"
+        value_type: raw
+      - value: letsEncrypt.ingress.class=nginx
+        value_type: raw
+      - value: global.cattle.psp.enabled=false
+        value_type: raw

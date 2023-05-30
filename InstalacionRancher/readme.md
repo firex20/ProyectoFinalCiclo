@@ -211,6 +211,8 @@ adduser rancher
 usermod -aG docker rancher
 ```
 
+A este usuario debere crearle un nuevo par de claves ssh y registrar su propia clave publica en su fichero **"authorized_keys"** para que más tarde el instalador tenga acceso.
+
 ### **Cluster de kubernetes (RKE)**
 Ahora que tengo docker instalado tengo que instalar el cluster de kubernetes, he elegido instalar **RKE (Rancher Kubernetes Engine)** porque es la distribución de kubernetes creada por el equipo de rancher y es la recomendada para el mismo, aunque se puede instalar sobre cualquier otra distribución de cluster de kubernetes.
 
@@ -247,7 +249,12 @@ nodes:
         - etcd
         - worker
       ssh_key_path: /home/rancher/.ssh/id_rsa
+ingress:
+  provider: nginx
+  extra_args:
+    enable-ssl-passthrough: true
 ```
+
 Antes de instalar el cluster de rke debo crear una **clave ssh** para el usuario "rancher" de la misma forma que lo hice para root, para crearla simplemente uso el comando **"ssh-keygen"** con el usuario rancher y luego añado la clave publica generada en el fichero **.shh/authorized_keys**
 
 Ahora para crear el cluster de kubernetes debo ejecutar el siguiente comando mientras me encuentro en el mismo directorio en el que esta el fichero "cluster.yml"

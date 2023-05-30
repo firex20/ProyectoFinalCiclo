@@ -1,0 +1,5 @@
+---
+# vars file for rke
+
+# Ip for rancher, default is the default ip address of host
+ip_address: "{{ ansible_facts.default_ipv4.address }}"

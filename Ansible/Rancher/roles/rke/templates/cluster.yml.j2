@@ -1,0 +1,12 @@
+nodes:
+    - address: {{ ip_address }}
+      user: rancher
+      role:
+        - controlplane
+        - etcd
+        - worker
+      ssh_key_path: /home/rancher/.ssh/id_rsa
+ingress:
+  provider: nginx
+  extra_args:
+    enable-ssl-passthrough: true

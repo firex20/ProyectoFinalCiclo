@@ -1,0 +1,31 @@
+---
+# tasks file for kubectl
+- name: Make the directory /home/rancher/.local/bin if it doesnt exits.
+  ansible.builtin.file:
+    path: /home/rancher/.local/bin
+    state: directory
+    mode: '0770'
+    group: docker
+    owner: rancher
+
+- name: Download kubectl.
+  ansible.builtin.get_url:
+    url: https://dl.k8s.io/release/v1.25.0/bin/linux/amd64/kubectl
+    dest: /home/rancher/.local/bin/kubectl
+    mode: '0550'
+    group: docker
+    owner: rancher
+
+- name: Make the directory /home/rancher/.kube if it doesnt exits.
+  ansible.builtin.file:
+    path: /home/rancher/.kube
+    state: directory
+    mode: '0770'
+    owner: rancher
+
+- name: Copy the cluster kube-config to the user config.
+  copy:
+    dest: /home/rancher/.kube/config
+    src: "{{ cube_config }}"
+    remote_src: "{{ remote_kube_conf }}"
+    mode: '0600'

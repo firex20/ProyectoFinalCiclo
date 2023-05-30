@@ -1,0 +1,20 @@
+---
+- name: Centos - Install Pre-requisites.
+  ansible.builtin.yum:
+    update_cache: true
+    name: "yum-utils"
+    state: present
+
+- name: Centos - Add Docker repository.
+  shell: yum-config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+  args:
+    creates: /etc/yum.repos.d/docker-ce.repo
+
+- name: Install Docker.
+  ansible.builtin.yum:
+    update_cache: true
+    name: 
+    - docker-ce-20.10.24
+    - docker-ce-cli-20.10.24
+    - containerd.io
+    state: present

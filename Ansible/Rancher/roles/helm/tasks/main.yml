@@ -1,0 +1,42 @@
+---
+# tasks file for helm
+- name: Make the directory /home/rancher/.local/bin if it doesnt exits.
+  ansible.builtin.file:
+    path: /home/rancher/.local/bin
+    state: directory
+    mode: '0770'
+    group: docker
+    owner: rancher
+
+- name: Download helm binary.
+  ansible.builtin.get_url:
+    url: https://get.helm.sh/helm-v3.11.3-linux-amd64.tar.gz
+    dest: /home/rancher/helm-v3.11.3-linux-amd64.tar.gz
+    mode: '0640'
+
+- name: Unarchive helm binary.
+  ansible.builtin.unarchive:
+    src: /home/rancher/helm-v3.11.3-linux-amd64.tar.gz
+    dest: /home/rancher
+    remote_src: yes
+    mode: '0750'
+
+- name: Copy helm binary to /home/rancher/.local/bin.
+  copy:
+    dest: /home/rancher/.local/bin/helm
+    src: /home/rancher/linux-amd64/helm
+    remote_src: true
+    mode: '0750'
+
+- name: Remove helm directory and tar from rancher home.
+  file: 
+    path: 
+      - /home/rancher/linux-amd64
+      - /home/rancher/helm-v3.11.3-linux-amd64.tar.gz
+    state: absent
+
+- name: Install Helm diff for idempotence checks.
+  kubernetes.core.helm_plugin:
+    binary_path: /home/rancher/.local/bin/helm
+    plugin_path: https://github.com/databus23/helm-diff
+    state: present

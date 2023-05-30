@@ -1,0 +1,16 @@
+debian:
+  hosts:
+    10.200.129.162:
+  vars:
+    ansible_user: debian
+centos:
+  hosts:
+    10.200.129.157:
+  vars:
+    ansible_user: cloud-user
+all:
+  children:
+    debian:
+    centos:
+  vars:
+    ansible_ssh_private_key_file: /home/pedro/.ssh/id_rsa
