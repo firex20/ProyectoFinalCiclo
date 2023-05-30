@@ -70,15 +70,17 @@ Rancher nos da la opción de crear un **servicio** que apunte a el deployment di
 
 <img src="Images/Haproxy3.PNG" width="1000">
 
-Por último, tengo que compartir el fichero de configuración de haproxy de alguna manera entre los pods, como el cluster consiste de un solo nodo, simplemente voy a hacer un volumen de tipo "HostPath" para compartir una carpeta de la maquina virtual host de rancher con los pods de haproxy y ahi subo el archivo de configuración. Para esto tengo que crear un volumen en el menu del pod/storage y luego en el deplyment/storage lo vinculo a la carpeta del host que he creado para ello.
+Por último, tengo que compartir el fichero de configuración de haproxy de alguna manera entre los pods, para ello, he guardado la configuración como un **configmap** que luego he montado directamente como fichero en el directorio del contenedor donde debe ir esta configuración.
 
 <img src="Images/Haproxy4.PNG" width="1000">
+
+<img src="Images/Haproxy5-1.PNG" width="1000">
 
 <img src="Images/Haproxy5.PNG" width="1000">
 
 Una vez hechas estas configuraciones, el resto de opciones las dejo por defecto.
 
-Antes de terminar de crear el deployment debo subir el fichero de configuración **"haproxy.cfg"** a la carpeta que he vinculado en el host. Una vez hecho esto, tengo las dos replicas del pod de haproxy funcionando, solo me falta configurar **ingress** para que reeenvie el trafico a estos pods.
+Ahora ya tengo las dos replicas del pod de haproxy funcionando, solo me falta configurar **ingress** para que reeenvie el trafico a estos pods.
 
 <img src="Images/Haproxy6.PNG" width="1000">
 
