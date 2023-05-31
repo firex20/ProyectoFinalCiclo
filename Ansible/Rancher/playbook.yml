@@ -1,0 +1,15 @@
+---
+# Playbook for rancher install
+- name: Install Rancher and pre-requisites in all nodes.
+  hosts: all
+  gather_facts: yes
+  become: true
+  roles:
+    - {role: firewall, tags: security}
+    - {role: docker, tags: pre-requisites}
+    - {role: rke, tags: ["cluster", "kubernetes"]}
+    - {role: kubectl, tags: tools, become: true, become_user: rancher}
+    - {role: helm, tags: tools, become: true, become_user: rancher}
+    - {role: cert-manager, tags: ["certificates", "manager"], become: true, become_user: rancher}
+    - {role: rancher, tags: ["kubernetes", "manager"], become: true, become_user: rancher}
+

@@ -1,0 +1,11 @@
+---
+# handlers file for firewall
+- name: Reload sshd
+  ansible.builtin.systemd:
+      name: sshd.service
+      state: reloaded
+
+- name: Reload firewalld
+  ansible.builtin.systemd:
+      name: firewalld.service
+      state: reloaded

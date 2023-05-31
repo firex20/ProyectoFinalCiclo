@@ -1,0 +1,14 @@
+---
+- name: Shutdown Harvester servers
+  hosts: harvester
+  tasks:
+  - name: Shutdown harvester nodes
+    become: true
+    community.general.shutdown:
+
+- name: Shutdown Rancher server
+  hosts: rancher
+  tasks:
+  - name: Shutdown rancher node
+    become: true
+    community.general.shutdown:

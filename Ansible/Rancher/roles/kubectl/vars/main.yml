@@ -1,0 +1,8 @@
+---
+# vars file for kubectl
+
+# Default path for kube_config_cluster.yml
+cube_config: "/home/rancher/kube_config_cluster.yml"
+
+# Define if the cube-config path is on the node (true) or on the ansible-controller (false)
+remote_kube_conf: true

@@ -1,0 +1,6 @@
+---
+- name: Debian - Install firewalld in debian.
+  ansible.builtin.apt:
+    update_cache: true
+    name: "firewalld"
+    state: present

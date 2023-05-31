@@ -1,0 +1,84 @@
+---
+# tasks file for firewall
+- name: Install firewalld in redhat.
+  import_tasks: redhat.yml
+  when: ansible_facts['os_family']|lower == 'redhat'
+
+- name: Install firewalld in debian.
+  import_tasks: debian.yml
+  when: ansible_facts['os_family']|lower == 'debian'
+
+- name: Start firewalld service.
+  ansible.builtin.systemd:
+    name: firewalld.service
+    enabled: true
+    state: started
+
+- name: Get the network.
+  set_fact:
+    mynetwork: "{{ (ansible_facts.default_ipv4.network + '/' + ansible_facts.default_ipv4.netmask) | ipaddr('network/prefix') }}"
+
+- name: Apply firewall rules.
+  block:
+  - name: Https access from everywhere.
+    ansible.posix.firewalld:
+      service: https
+      permanent: true
+      state: enabled
+    notify: Reload firewalld
+  - name: Http access from everywhere.
+    ansible.posix.firewalld:
+      service: http
+      permanent: true
+      state: enabled
+    notify: Reload firewalld
+  - name: Create internal zone.
+    ansible.posix.firewalld:
+      zone: internal
+      state: present
+      permanent: true
+    notify: Reload firewalld
+  - name: Set internal source.
+    ansible.posix.firewalld:
+      zone: internal
+      source: "{{ mynetwork }}"
+      permanent: true
+      state: enabled
+    notify: Reload firewalld
+  - name: Enable ssh for internal zone.
+    ansible.posix.firewalld:
+      zone: internal
+      service: ssh
+      permanent: true
+      state: enabled
+    notify: Reload firewalld
+  - name: Disable ssh for default zone.
+    ansible.posix.firewalld:
+      service: ssh
+      permanent: true
+      state: disabled
+    notify: Reload firewalld
+  - name: Enable kubernetes api port for internal zone.
+    ansible.posix.firewalld:
+      zone: internal
+      port: 6443/tcp
+      permanent: true
+      state: enabled
+    notify: Reload firewalld
+
+- name: Disallow SSH password authentication.
+  block:
+  - name: Replace lines from config.
+    replace:
+      path: '/etc/ssh/sshd_config'
+      after: 'PasswordAuthentication'
+      regexp: '^(.*)PasswordAuthentication(.*)$'
+      replace: ''
+    notify: Reload sshd
+  - name: Set line to no.
+    lineinfile:
+      path: '/etc/ssh/sshd_config'
+      regexp: '^(.*)PasswordAuthentication(.*)$'
+      line: 'PasswordAuthentication no'
+    notify: Reload sshd
+  

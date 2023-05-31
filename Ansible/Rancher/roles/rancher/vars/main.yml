@@ -1,0 +1,14 @@
+---
+# vars file for rancher
+
+# Pass for rancher admin
+rancher_pass: "admin"
+
+# Hostname for rancher
+rancher_hostname: "{{ (ansible_facts.default_ipv4.address + '.sslip.io') }}"  # Default test hostname
+
+# tls-manager (letsEncrypt, rancher or secret)
+tls_source: "rancher"
+
+# email for letsencrypt
+letsEncrypt_email: "pmoldenhauer@trevenque.es"

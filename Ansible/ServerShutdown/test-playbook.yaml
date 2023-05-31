@@ -1,0 +1,16 @@
+---
+- name: Shutdown Harvester servers
+  hosts: harvester
+  tasks:
+  - name: Shutdown harvester nodes
+    become: true
+    debug:
+      msg: 'Testing'
+
+- name: Shutdown Rancher server
+  hosts: rancher
+  tasks:
+  - name: Shutdown rancher node
+    become: true
+    debug:
+      msg: 'Testing'
