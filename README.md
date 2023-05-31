@@ -110,6 +110,10 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://www.redhat.com/sysadmin/ansible-templates-configuration
 - https://www.buggycoder.com/ansible-error-failed-to-set-permissions/
 
+`Letsencrypt`
+- https://certbot.eff.org/instructions
+- https://dev.to/devlix-blog/automate-let-s-encrypt-automate-let-s-encrypt-wildcard-certificate-creation-with-ionos-dns-rest-api-o23
+- https://eff-certbot.readthedocs.io/en/stable/using.html#manual
 
 ---
 
