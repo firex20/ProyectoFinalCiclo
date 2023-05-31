@@ -2,17 +2,52 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    deployment.kubernetes.io/revision: '5'
+    deployment.kubernetes.io/revision: '6'
     field.cattle.io/description: >-
       Servicio de balanceo de cargas con haproxy para reenviar trafico a el
       cluster de argocd.
     field.cattle.io/publicEndpoints: >-
-      [{"addresses":["217.18.163.165"],"port":443,"protocol":"HTTPS","serviceName":"haproxy:haproxy","ingressName":"haproxy:nginx-test","hostname":"lab.pmolden.es","allNodes":false},{"addresses":["217.18.163.165"],"port":80,"protocol":"HTTP","serviceName":"haproxy:haproxy","ingressName":"haproxy:argocd","hostname":"argocd.pmolden.es","allNodes":false}]
+      [{"addresses":["217.18.163.165"],"port":443,"protocol":"HTTPS","serviceName":"haproxy:haproxy","ingressName":"haproxy:guestbook","hostname":"lab2.pmolden.es","allNodes":false},{"addresses":["217.18.163.165"],"port":443,"protocol":"HTTPS","serviceName":"haproxy:haproxy","ingressName":"haproxy:nginx-test","hostname":"lab.pmolden.es","allNodes":false},{"addresses":["217.18.163.165"],"port":80,"protocol":"HTTP","serviceName":"haproxy:haproxy","ingressName":"haproxy:argocd","hostname":"argocd.pmolden.es","allNodes":false}]
   creationTimestamp: '2023-05-15T07:20:16Z'
-  generation: 65
+  generation: 83
   labels:
     workload.user.cattle.io/workloadselector: apps.deployment-haproxy-haproxy
   managedFields:
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      manager: kube-controller-manager
+      operation: Update
+      subresource: status
+      time: '2023-05-31T10:12:40Z'
     - apiVersion: apps/v1
       fieldsType: FieldsV1
       fieldsV1:
@@ -92,52 +127,18 @@ metadata:
                 .: {}
                 k:{"name":"haproxy-conf"}:
                   .: {}
-                  f:hostPath:
+                  f:configMap:
                     .: {}
-                    f:path: {}
-                    f:type: {}
+                    f:defaultMode: {}
+                    f:name: {}
+                    f:optional: {}
                   f:name: {}
       manager: rancher
       operation: Update
-      time: '2023-05-16T10:26:00Z'
-    - apiVersion: apps/v1
-      fieldsType: FieldsV1
-      fieldsV1:
-        f:metadata:
-          f:annotations:
-            .: {}
-            f:deployment.kubernetes.io/revision: {}
-        f:status:
-          f:availableReplicas: {}
-          f:conditions:
-            .: {}
-            k:{"type":"Available"}:
-              .: {}
-              f:lastTransitionTime: {}
-              f:lastUpdateTime: {}
-              f:message: {}
-              f:reason: {}
-              f:status: {}
-              f:type: {}
-            k:{"type":"Progressing"}:
-              .: {}
-              f:lastTransitionTime: {}
-              f:lastUpdateTime: {}
-              f:message: {}
-              f:reason: {}
-              f:status: {}
-              f:type: {}
-          f:observedGeneration: {}
-          f:readyReplicas: {}
-          f:replicas: {}
-          f:updatedReplicas: {}
-      manager: kube-controller-manager
-      operation: Update
-      subresource: status
-      time: '2023-05-16T10:26:04Z'
+      time: '2023-05-31T10:12:40Z'
   name: haproxy
   namespace: haproxy
-  resourceVersion: '500558'
+  resourceVersion: '2781760'
   uid: 6f3af5ac-cc85-4dc0-9627-fd82d03357e0
 spec:
   progressDeadlineSeconds: 600
@@ -192,26 +193,27 @@ spec:
       securityContext: {}
       terminationGracePeriodSeconds: 30
       volumes:
-        - hostPath:
-            path: /home/rancher/haproxy
-            type: ''
+        - configMap:
+            defaultMode: 420
+            name: haproxy-config
+            optional: false
           name: haproxy-conf
 status:
   availableReplicas: 2
   conditions:
-    - lastTransitionTime: '2023-05-16T08:28:30Z'
-      lastUpdateTime: '2023-05-16T08:28:30Z'
+    - lastTransitionTime: '2023-05-15T07:20:16Z'
+      lastUpdateTime: '2023-05-30T08:17:05Z'
+      message: ReplicaSet "haproxy-58f767b9b7" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: 'True'
+      type: Progressing
+    - lastTransitionTime: '2023-05-30T08:20:19Z'
+      lastUpdateTime: '2023-05-30T08:20:19Z'
       message: Deployment has minimum availability.
       reason: MinimumReplicasAvailable
       status: 'True'
       type: Available
-    - lastTransitionTime: '2023-05-15T07:20:16Z'
-      lastUpdateTime: '2023-05-16T10:26:04Z'
-      message: ReplicaSet "haproxy-7b8dd9969" has successfully progressed.
-      reason: NewReplicaSetAvailable
-      status: 'True'
-      type: Progressing
-  observedGeneration: 65
+  observedGeneration: 83
   readyReplicas: 2
   replicas: 2
   updatedReplicas: 2

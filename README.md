@@ -45,7 +45,6 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
     - Documentación ✅
 - Documento final recopilando toda la información del proyecto ❌
 - Preparar la presentacion y una prueba de despliegue ❌
-- (Extra) Instalar Prometheus y Grafana para control de recursos ❌
 - (Extra) Crear aplicación web propia y chart de helm para desplegarla ❌
 
 ---
