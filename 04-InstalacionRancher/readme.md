@@ -117,13 +117,13 @@ Como solo voy a usar un nodo no hace falta abrir muchos puertos.
 
 ### **Configuración clave ssh**
 
-Para securizar todavia más el servidor, voy a registrar mi clave publica ssh para el usuario root y voy a deshabilitar la autentificación por contraseña. Para ello creo el directorio .ssh en el directorio home de root y dentro creo un archivo llamado authorized_keys donde copiare la clave.
+Para securizar todavia más el servidor, voy a registrar mi clave ssh publica para el usuario root y voy a deshabilitar la autentificación por contraseña. Para ello, creo el directorio .ssh en el directorio home de root y dentro creo un archivo llamado **authorized_keys** donde copiare la clave.
 
 ```console
 mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys && chmod -R go= ~/.ssh
 ```
 
-Una vez hecho esto y copiada la clave dentro del archivo, cambio la siguiente configuración del servicio ssh en "/etc/ssh/sshd_config" para desactivar el loggin con contraseña en texto plano,
+Una vez hecho esto y copiada la clave dentro del archivo, cambio la siguiente configuración del servicio ssh en **"/etc/ssh/sshd_config"** para desactivar el loggin con contraseña en texto plano.
 
 ```nano
 # To disable tunneled clear text passwords, change to no here!
@@ -137,10 +137,11 @@ Hecho esto ya solo podre acceder al servidor con una clave ssh.
 
 ## Instalación
 
-A continuación voy a describir el proceso de instalación de manera manual de Rancher desde un SO recien instalado.
+A continuación voy a describir el proceso de instalación de Rancher desde un SO recien instalado.
 
 ### **Docker**
-Lo primero que hay que instalar en el servidor sera docker, para ello tengo que **añadir el repositorio** correspondiente de docker para rocky linux, no hay un repositorio especifico de docker para rocky linux, pero al estar basado en centos, es compatible con el repositorio de este.
+
+Lo primero que hay que instalar en el servidor sera docker, para ello tengo que **añadir el repositorio** correspondiente de docker para el SO. Al contrario que para Ubuntu, no hay un repositorio especifico de docker para rocky linux, pero al estar **basado en centos**, es compatible con el repositorio de este.
 
 ```console
 dnf check-update
@@ -157,7 +158,7 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docke
 apt update
 ```
 
-Una vez añadido el repositorio, antes de instalar docker, hay que tener en cuenta que la version que estoy usando de rke no soporta versiones de docker superiores a la 20.10.x, asi que tengo que instalar esa versión desde el repositorio, para ver las versiones disponibles en el repositorio que acabo de instalar uso el siguiente comando:
+Una vez añadido el repositorio, antes de instalar docker, hay que tener en cuenta que la **versión** que estoy usando de rke no soporta versiones de docker superiores a la 20.10.x, asi que tengo que instalar esa versión desde el repositorio, para **ver las versiones disponibles** en el repositorio que acabo de instalar uso el siguiente comando:
 
 ```console
 yum list docker-ce --showduplicates | sort -r
@@ -169,7 +170,7 @@ yum list docker-ce --showduplicates | sort -r
 apt list docker-ce -a
 ```
 
-El numero de versión sera el de la segunda columna empezando este justo despues de el doble punto ":" y terminando antes del guión "-", con lo cual la version que tengo que instalar sera la 20.10.24
+El numero de versión sera el de la segunda columna empezando este justo despues de el doble punto ":" y terminando antes del guión "-", con lo cual la versión que tengo que instalar sera la **20.10.24**.
 
 Ahora que ya tengo añadido el repositorio y se que versión tengo que instalar, hay que instalarlo e iniciar el servicio.
 
@@ -179,10 +180,12 @@ systemctl start docker
 systemctl enable docker
 ```
 
-(ubuntu)
+(Ubuntu)
 
 ```console
 apt install -y docker-ce=5:20.10.24~3-0~ubuntu-jammy docker-ce-cli=5:20.10.24~3-0~ubuntu-jammy containerd.io
+systemctl start docker
+systemctl enable docker
 ```
 
 Compruebo que se ha iniciado correctamente
@@ -206,20 +209,21 @@ TriggeredBy: ● docker.socket
 ...
 ```
 
-Por último preparo un usuario que no sea root pero con permisos para ejecutar comandos de docker para utilizarlo como usuario de rancher y el cluster de kubernetes. Para ello creo el usuario y lo añado al grupo "docker"
+Por último, preparo un **usuario** que no sea root pero con **permisos para ejecutar comandos de docker** para utilizarlo como usuario de rancher y el cluster de kubernetes. Para ello creo el usuario y lo añado al **grupo "docker"**.
 
 ```console
 adduser rancher
 usermod -aG docker rancher
 ```
 
-A este usuario debere crearle un nuevo par de claves ssh y registrar su propia clave publica en su fichero **"authorized_keys"** para que más tarde el instalador tenga acceso.
+A este usuario debere crearle un **nuevo par de claves ssh** y registrar su propia clave publica en su fichero **"authorized_keys"** para que más tarde el instalador tenga acceso.
 
 ### **Cluster de kubernetes (RKE)**
-Ahora que tengo docker instalado tengo que instalar el cluster de kubernetes, he elegido instalar **RKE (Rancher Kubernetes Engine)** porque es la distribución de kubernetes creada por el equipo de rancher y es la recomendada para el mismo, aunque se puede instalar sobre cualquier otra distribución de cluster de kubernetes.
 
-Lo primero sera descargar el fichero binario apropiado de rke, en este caso es el último release (1.4.4) en su version de linux_amd ([Releases de RKE](https://github.com/rancher/rke/releases)).
-A partir de ahora, una vez cambio a el usuario "rancher" ejecutare todos los comandos siguientes desde ese usuario.
+Ahora que docker esta instalado, tengo que **instalar el cluster de kubernetes**, he elegido instalar **RKE (Rancher Kubernetes Engine)** porque es la distribución de kubernetes creada por el equipo de rancher y es la recomendada para el mismo, aunque se puede instalar sobre cualquier otra distribución de cluster de kubernetes.
+
+Lo primero sera **descargar el fichero binario** apropiado de rke, en este caso es el último release (1.4.4) en su version de linux_amd ([Releases de RKE](https://github.com/rancher/rke/releases)).
+A partir de ahora, una vez **cambio a el usuario "rancher"** ejecutare todos los comandos siguientes desde ese usuario.
 
 ```console
 dnf install -y wget
@@ -238,9 +242,10 @@ echo 'export PATH="~/.local/bin:$PATH"' >> .bashrc
 export PATH="~/.local/bin:$PATH"
 rke
 ```
-A continuación tengo que preparar la **configuración del cluster** dentro de un archivo llamado "cluster.yml", voy a usar el [ejemplo de configuración minima](https://rke.docs.rancher.com/example-yamls#minimal-cluster-yml-example) que proporciona rke y lo modifico para que se adecue a mi servidor.
 
-A parte de modificar la ip y el nombre del usuario, voy a añadir una configuración de ingress para activar el **"ssl-pass-through"**, esto sera necesario para poder exponer publicamente a internet ciertas aplicaciones con ssl una vez que este el cluster final funcionando.
+A continuación tengo que preparar la **configuración del cluster** dentro de un archivo llamado **"cluster.yml"**. Voy a usar el [ejemplo de configuración minima](https://rke.docs.rancher.com/example-yamls#minimal-cluster-yml-example) que proporciona rke y lo modifico para que se adecue a mi servidor.
+
+A parte de **modificar la ip y el nombre del usuario**, voy a añadir una configuración de ingress para activar el **"ssl-pass-through"**, esto sera necesario para poder exponer publicamente a internet ciertas aplicaciones con ssl ya integrado una vez que este el cluster final funcionando.
 
 ```yml
 nodes:
@@ -259,7 +264,7 @@ ingress:
 
 Antes de instalar el cluster de rke debo crear una **clave ssh** para el usuario "rancher" de la misma forma que lo hice para root, para crearla simplemente uso el comando **"ssh-keygen"** con el usuario rancher y luego añado la clave publica generada en el fichero **.shh/authorized_keys**
 
-Ahora para crear el cluster de kubernetes debo ejecutar el siguiente comando mientras me encuentro en el mismo directorio en el que esta el fichero "cluster.yml"
+Ahora para **crear el cluster de kubernetes** ejecuto el siguiente comando mientras me encuentro en **el mismo directorio en el que esta el fichero "cluster.yml"**
 
 ```console
 rke up
@@ -274,11 +279,12 @@ INFO[0187] Finished building Kubernetes cluster successfully
 Por último, en la documetación de RKE recomiendan hacer copias de los tres archivos que hemos generado durante la instalación **(cluster.rkestate  cluster.yml  kube_config_cluster.yml)** ya que en estos ficheros tenemos toda la configuración y información de acceso del cluster. Ahora que ya tengo instalado y funcionando el cluster de RKE, hay que instalar las herramientas necesarias para administrarlo e instalar rancher las cuales son **kubectl** y **helm**. No hace falta que estas herramientas se instalen en el propio servidor de kubernetes ya que se puede administrar de manera remota, pero yo las voy a instalar directamente en el servidor.
 
 ### **Instalar Kubectl y Helm**
+
 A partir de aqui hago todas las instalaciones con el usuario **rancher**.
 
-Primero voy a **instalar y configurar kubectl**, para ello primero tengo que elegir una versión y descargarla en el servidor con el comando "curl", para elegir una versión hay que tener en cuenta que kubectl funciona con una versión inferior o superior de kubernetes que la suya, es decir, si instalamos kubectl 1.26, este nos valdra para administrar clusters con kubernetes 1.25.x, 1.26.x o 1.27.x
+Primero voy a **instalar y configurar kubectl**, primero tengo que elegir una versión y descargarla en el servidor con el comando "curl", para **elegir una versión** hay que tener en cuenta que kubectl funciona con **una versión inferior o superior** de kubernetes que la suya, es decir, si instalamos kubectl 1.26, este nos valdra para administrar clusters con kubernetes 1.25.x, 1.26.x o 1.27.x
 
-En el caso del cluster que he instalado tiene la versión 1.24, con lo cual debo instalar la versión 1.25 de kubectl. Ejecutando los siguientes comandos ya tendre descargado e instalado kubectl.
+En el caso del cluster que he instalado tiene la versión 1.24, con lo cual debo instalar la **versión 1.25 de kubectl**. Ejecutando los siguientes comandos ya tendre descargado e instalado kubectl.
 
 ```console
 curl -LO https://dl.k8s.io/release/v1.25.0/bin/linux/amd64/kubectl
@@ -287,7 +293,7 @@ mkdir -p ~/.local/bin
 mv ./kubectl ~/.local/bin/kubectl
 ```
 
-Ahora tendremos que copiar el archivo de conexión del cluster que se genero durante la instalación a el directorio de configuración de kubectl. Lo tendremos que hacer con el usuario **root** ya que con rancher no tenemos permisos para copiarlo.
+Ahora tendre que copiar el **archivo de conexión** del cluster que se genero durante la instalación a el directorio de configuración de kubectl. Lo tendremos que hacer con el usuario **root** ya que con rancher no tenemos permisos para copiarlo.
 
 ```console
 mkdir ~/.kube
@@ -297,14 +303,14 @@ chown rancher:rancher /home/rancher/.kube/config
 su - rancher
 ```
 
-Ya tenemos configurado kubectl, ahora si ejecuto un **"kubectl get nodes"** deberia de ver el nodo local
+Ya tenemos configurado kubectl, ahora si ejecuto un **"kubectl get nodes"** deberia de ver el nodo local.
 
 ```console
 NAME           STATUS   ROLES                       AGE   VERSION
 pmoldenhauer   Ready    control-plane,etcd,master   63m   v1.24.12+rke2r1
 ```
 
-Ahora voy a instalar **Helm**, para ello, lo unico que tengo que hacer es descargarme el fichero binario de la última versión de Helm de la [pagina oficial](https://github.com/helm/helm/releases), descomprimirla, moverla a algun directorio que este añadido en $PATH, en este caso lo voy a poner en ".local/bin/helm" y cambiarle el nombre al fichero a "helm".
+Ahora voy a instalar **Helm**, para ello, lo único que tengo que hacer es descargarme el fichero binario de la última versión de Helm de la [pagina oficial](https://github.com/helm/helm/releases), descomprimirla, moverla a algun directorio que este añadido en $PATH, en este caso lo voy a poner en **".local/bin/helm"** y cambiarle el nombre al fichero a "helm".
 
 ```cosole
 wget https://get.helm.sh/helm-v3.11.3-linux-amd64.tar.gz
@@ -312,11 +318,11 @@ tar -zxvf helm-v3.11.3-linux-amd64.tar.gz
 mv linux-amd64/helm .local/bin/helm
 ```
 
-Hay muchas otras maneras de instalar helm, pero esta me ha parecido la más sencilla, sobre todo para más tarde hacerlo de manera automatizada. Ahora que tengo kubectl y helm listos, solo me queda instalar **cert-manager** y rancher.
+Hay muchas otras maneras de instalar helm, pero esta me ha parecido la más sencilla, sobre todo para más tarde hacerlo de manera automatizada. Ahora que tengo kubectl y helm listos, solo me queda instalar **cert-manager** y rancher en el cluster de RKE.
 
 ### Cert-manager
 
-Cert-manager es un gestor de certificados que es necesario para instalar rancher si queremos tener certificados autofirmados o certificados de letsencrypt de manera automatica. Para instalarlo, ya que es un chart de helm, lo unico que hay que hacer es **añadir el repositorio e instalarlo con helm.**
+Cert-manager es un gestor de certificados que es necesario para instalar rancher si queremos tener **certificados autofirmados** o **certificados de letsencrypt** de manera automatica. Para instalarlo, ya que es un chart de helm, lo único que hay que hacer es **añadir el repositorio e instalarlo con helm.**
 
 Añado el repositorio y actualizo la información de los repos con los siguientes comandos:
 
@@ -349,30 +355,30 @@ Y tambien uso el siguiente comando para comprobar que esta funcionando correctam
 cmctl check api
 ```
 
-Ya tengo todo listo para instalar rancher y poder acceder a la interfaz web
+Ya tengo todo listo para **instalar rancher** y poder acceder a la interfaz web.
 
 ### Rancher
 
-Ya solo queda instalar el propio **Rancher**, para ello lo primero que hay que hacer es añadir el repositorio de Rancher que se quiera, hay tres opciones, el repositorio **stable**, que instalara una versión estable y muy testeada de rancher, el repositorio **latest**, que instalara la última versión de rancher disponible y el repositorio **alpha**, que instalara la última versión con todos los cambios ya disponibles que habra en la siguiente versión. Yo he elegido instalar la versión estable.
+Ya solo queda instalar el propio **Rancher**, para ello lo primero que hay que hacer es añadir el repositorio de Rancher que se quiera, hay tres opciones, el repositorio **stable**, que instalara una versión estable y muy testeada de rancher, el repositorio **latest**, que instalara la última versión de rancher disponible y el repositorio **alpha**, que instalara la última versión con todos los cambios ya disponibles que habra en la siguiente versión. Yo he elegido instalar la versión estable, ya que esta suele ser la ópcion en un entorno de producción.
 
 ```console
 helm repo add rancher-stable https://releases.rancher.com/server-charts/stable
 helm repo update
 ```
 
-Creo el namespace para rancher, debe tener el nombre "cattle-system"
+Creo el **namespace** para rancher, debe tener el nombre **"cattle-system"**
 
 ```console
 kubectl create namespace cattle-system
 ```
-Y porl último, instalamos rancher con helm, hay varias opciones para manejar los certificados de rancher, con certificados autofirmados, con letsencrypt o dandole ficheros de certificados previamente hechos. Para las dos primeras opciones necesitaremos cert-manager, por eso lo instale previamente ya que yo voy a usar la opción de cert-manager.
+Y por último, **instalamos rancher con helm**, hay varias opciones para manejar los certificados de rancher, con certificados autofirmados, con letsencrypt o dandole ficheros de certificados previamente hechos. Para las dos primeras opciones necesitaremos cert-manager, por eso lo instale previamente ya que yo voy a usar la opción de **letsencrypt con cert-manager**.
 
 Las opciones de instalación que pongo más abajo son:
-1. El namespace donde se instalara rancher.
-2. El hostname de rancher, el cual debe ser el nombre dns que apuntara a el servidor.
-3. La contraseña que se usara para acceder a la interfaz de rancher como administrador.
-4. El tipo de manejo de certificados que usaremos, en este caso es letsencrypt.
-5. El controlador de ingress que estemos usando, por defecto es nginx.
+1. El **namespace** donde se instalara rancher.
+2. El **hostname** de rancher, el cual debe ser el nombre dns que apunta a el servidor.
+3. La **contraseña** que se usara para acceder a la interfaz de rancher como administrador.
+4. El tipo de **manejo de certificados** que usaremos, en este caso es letsencrypt.
+5. El **controlador de ingress** que estemos usando, por defecto es nginx.
 
 ```console
 helm install rancher rancher-stable/rancher \
@@ -384,7 +390,7 @@ helm install rancher rancher-stable/rancher \
   --set letsEncrypt.ingress.class=nginx \
   --set global.cattle.psp.enabled=false
 ```
-Cuando acabe de instalar, usamos el siguiente comando para ver el progreso del despliege de rancher:
+Cuando acabe de instalar, uso el siguiente comando para ver el progreso del despliege de rancher:
 
 ```console
 kubectl -n cattle-system rollout status deploy/rancher
@@ -399,47 +405,48 @@ Y por último tambien se puede usar el siguiente comando para comprobar que todo
 ```console
 kubectl -n cattle-system get deploy rancher
 ```
+
 ```console
 NAME      DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
 rancher   3         3         3            3           3m
 ```
 
-Una vez que haya acabado, ya estara rancher instalado y podremos acceder a la interfaz web usando el nombre dns. Ya solo queda **añadir el cluster de Harvester** a Rancher.
+Una vez que haya acabado, ya estara rancher instalado y podre acceder a la interfaz web usando el FQDN que le haya asignado a rancher. Ya solo queda **añadir el cluster de Harvester** a Rancher.
 
 ---
 
 ## Conectar el cluster de Harvester
 
-Una vez que tanto Rancher como el cluster de harvester estan funcionando podemos conectar el cluster a Rancher para poder gestionarlo desde ahi y crear de manera facil y automatizada clusteres de kubernetes dentrdo de Harvester, para hacer esto, lo primero que hay que hacer es importar un cluster en rancher en la pestaña del menu de la izquierda **"Virtualization Manager"**.
+Una vez que tanto Rancher como el cluster de Harvester estan funcionando, puedo **conectar el cluster a Rancher** para poder gestionarlo desde ahí y crear de manera facil y casi automatizada clusteres de kubernetes dentro de Harvester. Para hacer esto, lo primero que hay que hacer es importar un cluster en rancher en la pestaña del menu de la izquierda **"Virtualization Manager"**.
 
 <img src="Images/CapturaRancher1.PNG" width="1000">
 
-Dentro de esta pestaña, tenemos que elegir la opción de de **"Import"** que esta arriba a la derecha.
+Dentro de esta pestaña, hay que elegir la opción de de **"Import"** que esta arriba a la derecha.
 
 <img src="Images/CapturaRancher2.PNG" width="1000">
 
-Se abre una pagina donde debemos de poner un nombre para el cluster y podemos elegir que miembros tienen acceso a este cluster, una vez puesto el nombre elegimos la opcion "Create" de abajo a la derecha.
+Se abre una pagina donde hay que poner un **nombre para el cluster** y podemos elegir que **miembros tienen acceso** a este cluster, los miembros son los distintos **usuarios** que se pueden crear en rancher para separar los permisos a los distintos clusteres y opciones de Rancher. Una vez puesto el nombre elijo la opcion de **"Create"** de abajo a la derecha.
 
 <img src="Images/CapturaRancher3.PNG" width="1000">
 
-Por último se nos abre la la pestaña del cluster donde nos da las instruciones para unir el cluster de harvester. Para esto, hay que copiar el enlace que nos da aqui y en la **interfaz del cluster de Harvester**.
+Por último, se abre la pestaña del cluster donde tenemos las **instruciones para unir el cluster** de harvester. Para esto, hay que copiar el enlace que aparece aqui y ir a la **interfaz web del cluster de Harvester**.
 
 <img src="Images/CapturaRancher4.PNG" width="1000">
 
-Aqui hay que ir a "Advanced->Settings". 
+En la interfaz de Harvester hay que ir a **"Advanced->Settings"**. 
 
 <img src="Images/CapturaHarvester1.png" width="1000">
 
 <img src="Images/CapturaHarvester3.png" width="1000">
 
-Y aqui buscamos la opción de **"cluster-registration-url"** y la editamos poniendo la url que copiamos en rancher.
+Y aquí buscar la opción de **"cluster-registration-url"** y la editarla para poner la url que copiada de Rancher.
 
 <img src="Images/CapturaHarvester2.png" width="1000">
 
-En pocos segundos, podremos ver que el cluster ya esta añadido y activo en el menu "Virtualization Manager" de Rancher y podremos acceder a la **interfaz web de Harvester** pulsando sobre el nombre del cluster.
+Si todo ha salido correctamente, en pocos segundos podremos ver que el cluster ya esta añadido y activo en el menu **"Virtualization Manager"** de Rancher y podre acceder a la **interfaz web de Harvester** pulsando sobre el nombre del cluster.
 
 <img src="Images/CapturaRancher5.PNG" width="1000">
 
 ---
 
-Ya tengo Rancher instalado, funcionado y conectado a el cluster de harvester. Lo siguiente que debo hacer sera crear el cluster de kubernetes dentro de harvester e instalar Argocd.
+Ya tengo **Rancher instalado, funcionado y conectado** a el cluster de harvester. Lo siguiente que voy a hacer sera crear el cluster de kubernetes dentro de harvester e instalar Argocd.
