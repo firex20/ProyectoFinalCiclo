@@ -43,8 +43,11 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - Configurar acceso a las aplicaciones desde internet con haproxy/ingress
     - Función ✅
     - Documentación ✅
+- Crear certificado para las aplicaciones con Letsencrypt
+    - Función ✅
+    - Documentación ✅
 - Documento final recopilando toda la información del proyecto ❌
-- Preparar la presentacion y una prueba de despliegue ❌
+- Preparar la presentacion y una prueba de despliegue ✅
 - (Extra) Crear aplicación web propia y chart de helm para desplegarla ❌
 
 ---
