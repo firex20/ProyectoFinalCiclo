@@ -105,6 +105,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://www.suse.com/support/kb/doc/?id=000020147
 - https://serversforhackers.com/c/using-ssl-certificates-with-haproxy
 - https://rancher.support/training/rke/rke-cluster-yaml-breakdown/#ingress
+- https://www.haproxy.com/blog/how-to-map-domain-names-to-backend-server-pools-with-haproxy
 
 `Ansible`
 - https://fabianlee.org/2021/05/29/ansible-orchestrating-ssh-access-through-a-bastion-host/
