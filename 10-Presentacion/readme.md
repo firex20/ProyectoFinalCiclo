@@ -26,7 +26,7 @@
 
 6. ArgoCD
 
-    - Despliegue de aplicación de ejemplo
+    - Despliegue de aplicación de ejemplo ( https://github.com/firex20/helm-example-app )
     - Hablar del certificado de letsencrypt
 
 7 Acceso a aplicaciones
