@@ -46,7 +46,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - Crear certificado para las aplicaciones con Letsencrypt
     - Función ✅
     - Documentación ✅
-- Documento final recopilando toda la información del proyecto ❌
+- Documento final recopilando toda la información del proyecto ✅
 - Preparar la presentacion y una prueba de despliegue ✅
 - (Extra) Crear aplicación web propia y chart de helm para desplegarla ✅
 
@@ -91,6 +91,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 
 - https://dl.rockylinux.org/vault/rocky/9.0/images/x86_64/
 - https://cloud.debian.org/images/cloud/bullseye/latest/
+- https://www.reddit.com/r/rancher/comments/y3uvmg/comment/isb9zmh/
 
 `ArgoCD`
 - https://argo-cd.readthedocs.io/en/stable/
@@ -102,6 +103,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://github.com/gd4Ark/star-battle
 - https://computingforgeeks.com/perform-git-clone-in-kubernetes-pod-deployment/
 - https://github.com/firex20/helm-example-app
+- https://artifacthub.io/packages/helm/nextcloud/nextcloud
 
 `HaProxy`
 - https://www.haproxy.com/blog/haproxy-configuration-basics-load-balance-your-servers/
