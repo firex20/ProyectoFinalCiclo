@@ -74,9 +74,19 @@ Lo siguiente que hay que configurar son las **caracteristicas hardware** del nod
 
 <img src="Images/Captura4.PNG" width="1000">
 
-Ahora hay que configurar las disntintas **redes** a las que estara conectado el nodo, en este caso estara unicamente conectado a la red de VM (129). 
+Ahora hay que configurar las disntintas **redes** a las que estara conectado el nodo, en este caso estara unicamente conectado a la red de VM (129).
 
 <img src="Images/Captura5.PNG" width="1000">
+
+Tambien hay que añadir una **clave ssh** para poder loggearse en los nodos directamente en caso de ser necesario en algun momento, para ello, en la seccion de **Advanced options/User Data YAML**  hay que añadir lo siguiente:
+
+```yaml
+ssh_authorized_keys:
+  - ssh-rsa
+    <clave-ssh-publica>
+```
+
+<img src="Images/Captura4-2.PNG" width="1000">
 
 Por último, hay que configurar un **nombre para la plantilla** y las **etiquetas y taints** que va a tener este nodo de kubernetes, en el master he añadido un taint que impide que se añada ningun pod nuevo a esa maquina que no este esplicitamente especificado. Para terminar pulso el botón de **"Create"** de abajo y procedo a crear la plantilla del Worker.
 
@@ -152,5 +162,29 @@ Ademas de esto, arriba a la derecha hay varias opciones para administrar el clus
 <img src="Images/Admin4.PNG" width="1000">
 
 *Hay que tener en cuenta que solo se podra acceder a kubectl desde rancher o con el archivo de kubeconfig en un equipo que este conectado a la misma red que el cluster*
+
+---
+
+## Longhorn (Storage Class)
+
+Para manejar de manera automatica la ceracion de **volumenes persistentes y sus claims** voy a instalar longhorn ya que se puede instalar de manera facil desde la interfaz de rancher y tambien tiene su propia interfaz donde muestra la cantidad de memoria disponible que tenemos entre otras estadisticas.
+
+<img src="Images/longhorn1.PNG" width="1000">
+
+Lo primero que hay que hacer para instalar longhorn es instalar **open-iscsi** en todos los nodos, esto se puede hacer a mano conectandose con ssh o con un simple playbook de ansible y usando el comando:
+
+```console
+apt install -y open-iscsi
+```
+
+Una vez instalado en todos los nodos del cluster, lo unico que falta por hacer es ir a la seccion de **Apps->Charts** del dashboard del cluster, ahi buscar **longhorn** e instalarlo.
+
+<img src="Images/longhorn2.PNG" width="1000">
+
+*Donde pone Update pondra Install si aun no se ha instalado*
+
+Una vez termine de instalar, tengo disponible la storageclass de longhorn que se habra seleccionado como **clase por defecto**, ya que no habia ninguna otra antes, y puedo acceder a la interfaz de longhorn a traves de una **nueva opción del menu** que se ha creado a la izquierda en el dashboard del cluster.
+
+---
 
 Ya tengo el **cluster creado y funcionando**, ahora podria empezar a desplegar aplicaciones a traves de **deployments y servicios** como con cualquier otro cluster de kubernetes. Pero antes de hacer esto, voy a instalar un **gestor con interfaz web** para conectar, desplegar y mantener actualizados automaticamente proyectos de kubernetes desde Helm o github llamado **ArgoCD**.

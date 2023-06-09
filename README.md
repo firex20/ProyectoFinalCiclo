@@ -33,6 +33,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - Crear cluster de kubernetes desde rancher y testearlo
     - Creación imagen SO ✅
     - Creación cluster ✅
+    - Longhorn ✅
     - Documentación ✅
 - Instalar ArgoCD y configurarlo
     - Función ✅
