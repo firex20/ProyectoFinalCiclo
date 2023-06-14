@@ -106,10 +106,11 @@ En argocd el ingress debe apuntar al servicio haproxy en el puerto 443 y en el d
 
 <img src="Images/Ingress-Local2.PNG" width="1000">
 
-Por último, solo en el ingress de argocd, en la pestaña de **"Labels & Annotatios"** debo poner una nueva annotation para activar el **"ssl-passthrough"**, esto sirve para que ingress pase directamente todos los datos de la conexión ssl sin modificarlos ni redirigirlos ya que por defecto seria ingress el que maneja los certificados y hace redirecciones automaticamente del puerto 80 al 443, pero para argocd, que tiene su propia redirección y certificado, no funcionaria y entraria en un bucle de redireccionamiento.
+Por último, solo en el ingress de argocd, en la pestaña de **"Labels & Annotatios"** debo poner una nueva annotation para activar el **"ssl-passthrough"**, esto sirve para que ingress pase directamente todos los datos de la conexión ssl sin modificarlos ni redirigirlos ya que por defecto seria ingress el que maneja los certificados y hace redirecciones automaticamente del puerto 80 al 443, pero para argocd, que tiene su propia redirección y certificado, no funcionaria y entraria en un bucle de redireccionamiento. Tambien debo poner otra anotacion para forzar la redirección de las peticiones http a https, ya que si no, al intentar enviar peticiones http normales el nginx de ingress dara un error.
 
 ```console
 nginx.ingress.kubernetes.io/ssl-passthrough=true
+nginx.ingress.kubernetes.io/force-ssl-redirect
 ```
 
 <img src="Images/Ingress-Local3.PNG" width="1000">

@@ -64,6 +64,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - La configuración de haproxy no se puede compartir con un configmap debido a que tiene una sintaxis estricta que no es compatible con el formato.
 - Para poder acceder a aplicaciones que tienen su propio certificado tls he tenido que activar el ssl-passthrough en los clusteres tanto local de rancher como el de argocd.
 - La instalación de prometheus de harvester no estaba funcionando por falta de memoria.
+- Al activar ssl-pasthroug hay que poner otra anotacion en el ingres del cluster local "nginx.ingress.kubernetes.io/force-ssl-redirect=true" para forzar las peticiones http a https, si no, al enviar peticiones http da error.
 ---
 
 ## Documentación y manuales usados para el proyecto
