@@ -47,7 +47,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - Crear certificado para las aplicaciones con Letsencrypt
     - Función ✅
     - Documentación ✅
-- Documento final recopilando toda la información del proyecto ❌
+- Documento final recopilando toda la información del proyecto ✅
 - Preparar la presentacion y una prueba de despliegue ✅
 - (Extra) Crear aplicación web propia y chart de helm para desplegarla ✅
 
@@ -92,6 +92,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 
 - https://dl.rockylinux.org/vault/rocky/9.0/images/x86_64/
 - https://cloud.debian.org/images/cloud/bullseye/latest/
+- https://www.reddit.com/r/rancher/comments/y3uvmg/comment/isb9zmh/
 
 `ArgoCD`
 - https://argo-cd.readthedocs.io/en/stable/
@@ -103,6 +104,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://github.com/gd4Ark/star-battle
 - https://computingforgeeks.com/perform-git-clone-in-kubernetes-pod-deployment/
 - https://github.com/firex20/helm-example-app
+- https://artifacthub.io/packages/helm/nextcloud/nextcloud
 
 `HaProxy`
 - https://www.haproxy.com/blog/haproxy-configuration-basics-load-balance-your-servers/
@@ -124,6 +126,14 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://certbot.eff.org/instructions
 - https://dev.to/devlix-blog/automate-let-s-encrypt-automate-let-s-encrypt-wildcard-certificate-creation-with-ionos-dns-rest-api-o23
 - https://eff-certbot.readthedocs.io/en/stable/using.html#manual
+
+---
+
+## Conclusión final de proyecto
+
+Como conclusion al sistema y proyecto realizados, me parece que, a pesar de tener cierta dificultad a la hora de entender por primera vez todos los componentes, una vez que los entiendes, es facil instalar y configurar todo. Ademas, es un sistema solido y bastante a prueba de fallos, que usa tecnologia moderna, opensource y dirigida a empresas, con lo cual, es muy fiable. Teniendo todo esto en cuenta, me parece una solución muy viable para empresas medianas-grandes que necesiten de un sistema de virtualización de alta disponibilidad.
+Con respecto al proyecto en si, me parece que he alcanzado el punto en el que se podria empezar a utilizar para desarrollo o testeo, pero aun habria muchas cosas que mejorar, como por ejemplo el sistema de creación de backups, una monitorización central, escalado de las aplicaciones de manera automatica según demanda, etc. Aunque, todo esto que me ha faltado, ha sido porque he considerado que no era necesario configurarlo para este proyecto por su simplicidad a la hora de hacerlo si fuese necesario o, en algunos casos como los backups, por falta de más recursos que serian excesivos para un proyecto de este estilo o por falta de tiempo.
+Dicho todo esto, personalmente estoy muy contento con el resultado de mi proyecto y con la documentación que he elaborado del mismo, me ha servido para aprender muchas tecnologias y conceptos nuevos y reafirmar algunos que ya habia aprendido.
 
 ---
 
