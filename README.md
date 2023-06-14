@@ -33,6 +33,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - Crear cluster de kubernetes desde rancher y testearlo
     - Creación imagen SO ✅
     - Creación cluster ✅
+    - Longhorn ✅
     - Documentación ✅
 - Instalar ArgoCD y configurarlo
     - Función ✅
@@ -43,13 +44,17 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - Configurar acceso a las aplicaciones desde internet con haproxy/ingress
     - Función ✅
     - Documentación ✅
-- Documento final recopilando toda la información del proyecto ❌
-- Preparar la presentacion y una prueba de despliegue ❌
-- (Extra) Crear aplicación web propia y chart de helm para desplegarla ❌
+- Crear certificado para las aplicaciones con Letsencrypt
+    - Función ✅
+    - Documentación ✅
+- Documento final recopilando toda la información del proyecto ✅
+- Preparar la presentacion y una prueba de despliegue ✅
+- (Extra) Crear aplicación web propia y chart de helm para desplegarla ✅
 
 ---
 
 ## Errores y problemas encontrados durante el desarrollo del proyecto
+
 - Al intentar instalar harvester conectandolo al switch con el puerto en modo trunk para aceptar vlan tageadas no era posible conectarse, hay que poner el puerto del switch en modo acceso.
 - Al instalar docker para rancher hay que instalar una versión concreta, no sirven las ultimas.
 - <del>Al intentar instalar el chart de helm de rancher sobre RKE hay incompatibilidades con la ultima version, para solocuinarlo he decidido instalar RKE2 en vez de RKE normal.</del> (Vuelta a RKE1, ya que habia incompatibilidades con RKE2, conseguido arreglar incompatibilidades de versiones de RKE1 desactivando PSP)
@@ -58,6 +63,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - Al crear un proyecto en argocd pone que no tengo permisos para ello. Solucionado creando roles y un nuevo proyecto de argocd
 - La configuración de haproxy no se puede compartir con un configmap debido a que tiene una sintaxis estricta que no es compatible con el formato.
 - Para poder acceder a aplicaciones que tienen su propio certificado tls he tenido que activar el ssl-passthrough en los clusteres tanto local de rancher como el de argocd.
+- La instalación de prometheus de harvester no estaba funcionando por falta de memoria.
 ---
 
 ## Documentación y manuales usados para el proyecto
@@ -67,6 +73,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://docs.harvesterhci.io/v1.1
 - https://www.balena.io/etcher
 - https://docs.harvesterhci.io/v1.1/advanced/storagenetwork/
+- https://github.com/harvester/harvester/issues/2586
 
 `Instalacion Rancher`
 
@@ -85,6 +92,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 
 - https://dl.rockylinux.org/vault/rocky/9.0/images/x86_64/
 - https://cloud.debian.org/images/cloud/bullseye/latest/
+- https://www.reddit.com/r/rancher/comments/y3uvmg/comment/isb9zmh/
 
 `ArgoCD`
 - https://argo-cd.readthedocs.io/en/stable/
@@ -94,6 +102,9 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://github.com/argoproj/argocd-example-apps
 - https://artifacthub.io/packages/helm/bitnami/nginx
 - https://github.com/gd4Ark/star-battle
+- https://computingforgeeks.com/perform-git-clone-in-kubernetes-pod-deployment/
+- https://github.com/firex20/helm-example-app
+- https://artifacthub.io/packages/helm/nextcloud/nextcloud
 
 `HaProxy`
 - https://www.haproxy.com/blog/haproxy-configuration-basics-load-balance-your-servers/
@@ -102,6 +113,7 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://www.suse.com/support/kb/doc/?id=000020147
 - https://serversforhackers.com/c/using-ssl-certificates-with-haproxy
 - https://rancher.support/training/rke/rke-cluster-yaml-breakdown/#ingress
+- https://www.haproxy.com/blog/how-to-map-domain-names-to-backend-server-pools-with-haproxy
 
 `Ansible`
 - https://fabianlee.org/2021/05/29/ansible-orchestrating-ssh-access-through-a-bastion-host/
@@ -110,6 +122,18 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 - https://www.redhat.com/sysadmin/ansible-templates-configuration
 - https://www.buggycoder.com/ansible-error-failed-to-set-permissions/
 
+`Letsencrypt`
+- https://certbot.eff.org/instructions
+- https://dev.to/devlix-blog/automate-let-s-encrypt-automate-let-s-encrypt-wildcard-certificate-creation-with-ionos-dns-rest-api-o23
+- https://eff-certbot.readthedocs.io/en/stable/using.html#manual
+
+---
+
+## Conclusión final de proyecto
+
+Como conclusion al sistema y proyecto realizados, me parece que, a pesar de tener cierta dificultad a la hora de entender por primera vez todos los componentes, una vez que los entiendes, es facil instalar y configurar todo. Ademas, es un sistema solido y bastante a prueba de fallos, que usa tecnologia moderna, opensource y dirigida a empresas, con lo cual, es muy fiable. Teniendo todo esto en cuenta, me parece una solución muy viable para empresas medianas-grandes que necesiten de un sistema de virtualización de alta disponibilidad.
+Con respecto al proyecto en si, me parece que he alcanzado el punto en el que se podria empezar a utilizar para desarrollo o testeo, pero aun habria muchas cosas que mejorar, como por ejemplo el sistema de creación de backups, una monitorización central, escalado de las aplicaciones de manera automatica según demanda, etc. Aunque, todo esto que me ha faltado, ha sido porque he considerado que no era necesario configurarlo para este proyecto por su simplicidad a la hora de hacerlo si fuese necesario o, en algunos casos como los backups, por falta de más recursos que serian excesivos para un proyecto de este estilo o por falta de tiempo.
+Dicho todo esto, personalmente estoy muy contento con el resultado de mi proyecto y con la documentación que he elaborado del mismo, me ha servido para aprender muchas tecnologias y conceptos nuevos y reafirmar algunos que ya habia aprendido.
 
 ---
 
