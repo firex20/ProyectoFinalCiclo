@@ -128,6 +128,14 @@ También, al estar basada en clústeres y replicada y tener varios enlaces dupli
 
 ---
 
+## Conclusión final de proyecto
+
+Como conclusion al sistema y proyecto realizados, me parece que, a pesar de tener cierta dificultad a la hora de entender por primera vez todos los componentes, una vez que los entiendes, es facil instalar y configurar todo. Ademas, es un sistema solido y bastante a prueba de fallos, que usa tecnologia moderna, opensource y dirigida a empresas, con lo cual, es muy fiable. Teniendo todo esto en cuenta, me parece una solución muy viable para empresas medianas-grandes que necesiten de un sistema de virtualización de alta disponibilidad.
+Con respecto al proyecto en si, me parece que he alcanzado el punto en el que se podria empezar a utilizar para desarrollo o testeo, pero aun habria muchas cosas que mejorar, como por ejemplo el sistema de creación de backups, una monitorización central, escalado de las aplicaciones de manera automatica según demanda, etc. Aunque, todo esto que me ha faltado, ha sido porque he considerado que no era necesario configurarlo para este proyecto por su simplicidad a la hora de hacerlo si fuese necesario o, en algunos casos como los backups, por falta de más recursos que serian excesivos para un proyecto de este estilo o por falta de tiempo.
+Dicho todo esto, personalmente estoy muy contento con el resultado de mi proyecto y con la documentación que he elaborado del mismo, me ha servido para aprender muchas tecnologias y conceptos nuevos y reafirmar algunos que ya habia aprendido.
+
+---
+
 ## Pato paco
 
 <img src="Misc/paco.jpeg" width="200" alt="El Paco" title="El Paco te roba el tabaco ;)">
